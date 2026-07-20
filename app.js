@@ -7,7 +7,7 @@ const db = mysql.createConnection({
     host: 'c237-annie-mysql.mysql.database.azure.com',
     user: 'c237_020',
     password: 'c237020@2026!',
-    database: 'c237_020_regapp_ca2team4',
+    database: 'c237_eventsapp_team4',
     ssl: {
         rejectUnauthorized: false
     }
