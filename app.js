@@ -4,10 +4,10 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
 const db = mysql.createConnection({
-    host: 'c237-annie-mysql.mysql.database.azure.com',
-    user: 'c237_020',
-    password: 'c237020@2026!',
-    database: 'c237_eventsapp_team4',
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'RP738964$',
+    database: 'Local Host',
     ssl: {
         rejectUnauthorized: false
     }
