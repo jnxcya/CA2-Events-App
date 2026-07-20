@@ -7,7 +7,7 @@ const db = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
     password: 'RP738964$',
-    database: 'Local Host',
+    database: 'events.db',
     ssl: {
         rejectUnauthorized: false
     }
