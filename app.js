@@ -120,6 +120,29 @@ app.post('/login', (req, res) => {
         }
     });
 });
+app.get('/events', (req, res) => {
+    const sql = `
+        SELECT events.*,
+        COUNT(event_participants.participantId) AS currentPlayers
+        FROM events
+        LEFT JOIN event_participants
+            ON events.eventId = event_participants.eventId
+        GROUP BY events.eventId
+        ORDER BY events.eventDate ASC
+    `;
+
+    db.query(sql, (error, results) => {
+        if (error) {
+            console.error('Error retrieving events:', error);
+            return res.status(500).send('Unable to retrieve events');
+        }
+
+        res.render('events', {
+            events: results,
+            user: req.session.user
+        });
+    });
+});
 
 app.get('/dashboard', checkAuthenticated, (req, res) => {
     res.render('dashboard', { user: req.session.user });

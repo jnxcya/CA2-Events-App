@@ -1,1 +1,49 @@
-<html></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Events</title>
+</head>
+<body>
+
+    <h1>Browse Gaming Events</h1>
+
+    <% if (events.length === 0) { %>
+        <p>No events are available.</p>
+    <% } %>
+
+    <% events.forEach(event => { %>
+        <div class="event-card">
+            <h2><%= event.title %></h2>
+
+            <p>
+                <strong>Game:</strong>
+                <%= event.gameName %>
+            </p>
+
+            <p>
+                <strong>Platform:</strong>
+                <%= event.platform %>
+            </p>
+
+            <p>
+                <strong>Event Type:</strong>
+                <%= event.eventType %>
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                <%= event.eventDate %>
+            </p>
+
+            <p>
+                <strong>Players:</strong>
+                <%= event.currentPlayers %> /
+                <%= event.maxPlayers %>
+            </p>
+        </div>
+    <% }) %>
+
+</body>
+</html>
