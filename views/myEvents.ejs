@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events</title>
+    <link rel="stylesheet" href="/css/stylesheet.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="/">Gaming Event Planner</a>
+        <div class="links">
+            <a href="/events">Browse Events</a>
+            <a href="/events/add">Create Event</a>
+            <a href="/my-events">My Events</a>
+            <a href="/joined-events">Joined Events</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <h1>My Events</h1>
+        <p class="page-description">
+            These are the events you have created. You can edit or
+            delete any of them.
+        </p>
+
+        <% if (success === 'created') { %>
+            <div class="message success-message">
+                Your event was created successfully.
+            </div>
+        <% } %>
+
+        <% if (success === 'updated') { %>
+            <div class="message success-message">
+                Your event was updated successfully.
+            </div>
+        <% } %>
+
+        <% if (success === 'deleted') { %>
+            <div class="message success-message">
+                Your event was deleted.
+            </div>
+        <% } %>
+
+        <% if (error === 'eventNotFound') { %>
+            <div class="message error-message">
+                The selected event could not be found.
+            </div>
+        <% } %>
+
+        <% if (!events || events.length === 0) { %>
+
+            <div class="no-events">
+                <h2>You have not created any events yet</h2>
+                <p>
+                    Create your first event to start organising
+                    sessions for other players.
+                </p>
+                <a class="button primary-button" href="/events/add">
+                    Create Event
+                </a>
+            </div>
+
+        <% } else { %>
+
+            <section class="events-grid">
+
+                <% events.forEach(event => { %>
+
+                    <article class="event-card">
+
+                        <span class="event-type"><%= event.eventType %></span>
+
+                        <h2><%= event.title %></h2>
+
+                        <p><strong>Game:</strong> <%= event.gameName %></p>
+                        <p><strong>Platform:</strong> <%= event.platform %></p>
+
+                        <p>
+                            <strong>Date:</strong>
+                            <%= new Date(event.eventDate).toLocaleDateString('en-SG') %>
+                        </p>
+
+                        <p><strong>Time:</strong> <%= event.eventTime %></p>
+
+                        <p>
+                            <strong>Location/Server:</strong>
+                            <%= event.location || 'Not specified' %>
+                        </p>
+
+                        <p>
+                            <strong>Players:</strong>
+                            <%= event.currentPlayers %> / <%= event.maxPlayers %>
+                        </p>
+
+                        <% if (event.description) { %>
+                            <p><strong>Description:</strong> <%= event.description %></p>
+                        <% } %>
+
+                        <div class="event-actions">
+
+                            <a class="button secondary-button"
+                               href="/events/<%= event.eventId %>/edit">
+                                Edit
+                            </a>
+
+                            <form action="/events/<%= event.eventId %>/delete"
+                                  method="POST"
+                                  onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                                <button class="button leave-button" type="submit">
+                                    Delete
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                <% }) %>
+
+            </section>
+
+        <% } %>
+
+    </main>
+
+</body>
+</html>

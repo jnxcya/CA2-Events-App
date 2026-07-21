@@ -10,7 +10,7 @@
 
     <title>Browse Gaming Events</title>
 
-    
+    <link rel="stylesheet" href="/css/stylesheet.css">
 </head>
 
 <body>
@@ -22,6 +22,8 @@
             <a href="/events">Browse Events</a>
 
             <% if (user) { %>
+                <a href="/events/add">Create Event</a>
+                <a href="/my-events">My Events</a>
                 <a href="/joined-events">Joined Events</a>
                 <a href="/dashboard">Dashboard</a>
                 <a href="/logout">Logout</a>
@@ -53,6 +55,24 @@
             </div>
         <% } %>
 
+        <% if (success === 'created') { %>
+            <div class="message success-message">
+                Your event was created successfully.
+            </div>
+        <% } %>
+
+        <% if (success === 'updated') { %>
+            <div class="message success-message">
+                Your event was updated successfully.
+            </div>
+        <% } %>
+
+        <% if (success === 'deleted') { %>
+            <div class="message success-message">
+                Your event was deleted.
+            </div>
+        <% } %>
+
         <% if (error === 'full') { %>
             <div class="message error-message">
                 This event is already full.
@@ -68,6 +88,12 @@
         <% if (error === 'eventNotFound') { %>
             <div class="message error-message">
                 The selected event could not be found.
+            </div>
+        <% } %>
+
+        <% if (error === 'notAllowed') { %>
+            <div class="message error-message">
+                You can only edit or delete events that you created.
             </div>
         <% } %>
 
@@ -309,6 +335,37 @@
                                         type="submit"
                                     >
                                         Join Event
+                                    </button>
+                                </form>
+
+                            <% } %>
+
+                            <%
+                                /*
+                                 * Edit and delete are only offered to the
+                                 * user who created the event, or to an
+                                 * administrator.
+                                 */
+                            %>
+                            <% if (user && (event.createdBy === user.userId || user.role === 'admin')) { %>
+
+                                <a
+                                    class="button secondary-button"
+                                    href="/events/<%= event.eventId %>/edit"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="/events/<%= event.eventId %>/delete"
+                                    method="POST"
+                                    onsubmit="return confirm('Delete this event? This cannot be undone.');"
+                                >
+                                    <button
+                                        class="button leave-button"
+                                        type="submit"
+                                    >
+                                        Delete
                                     </button>
                                 </form>
 
