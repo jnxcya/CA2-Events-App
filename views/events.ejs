@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Browse Gaming Events</title>
 
-    
+
 </head>
 
 <body>
@@ -25,10 +23,10 @@
                 <a href="/joined-events">Joined Events</a>
                 <a href="/dashboard">Dashboard</a>
                 <a href="/logout">Logout</a>
-            <% } else { %>
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
-            <% } %>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                    <% } %>
         </div>
     </nav>
 
@@ -41,290 +39,237 @@
             casual matches and training activities.
         </p>
 
-        <% if (success === 'joined') { %>
+        <% if (success==='joined' ) { %>
             <div class="message success-message">
                 You successfully joined the event.
             </div>
-        <% } %>
+            <% } %>
 
-        <% if (success === 'left') { %>
-            <div class="message success-message">
-                You successfully left the event.
-            </div>
-        <% } %>
+                <% if (success==='left' ) { %>
+                    <div class="message success-message">
+                        You successfully left the event.
+                    </div>
+                    <% } %>
 
-        <% if (error === 'full') { %>
-            <div class="message error-message">
-                This event is already full.
-            </div>
-        <% } %>
-
-        <% if (error === 'alreadyJoined') { %>
-            <div class="message error-message">
-                You have already joined this event.
-            </div>
-        <% } %>
-
-        <% if (error === 'eventNotFound') { %>
-            <div class="message error-message">
-                The selected event could not be found.
-            </div>
-        <% } %>
-
-        <form
-            class="search-form"
-            action="/events"
-            method="GET"
-        >
-            <input
-                type="text"
-                name="search"
-                placeholder="Search by event title or game"
-                value="<%= search || '' %>"
-            >
-
-            <select name="platform">
-                <option value="">All Platforms</option>
-
-                <option
-                    value="PC"
-                    <%= platform === 'PC' ? 'selected' : '' %>
-                >
-                    PC
-                </option>
-
-                <option
-                    value="PlayStation"
-                    <%= platform === 'PlayStation'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    PlayStation
-                </option>
-
-                <option
-                    value="Xbox"
-                    <%= platform === 'Xbox'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Xbox
-                </option>
-
-                <option
-                    value="Mobile"
-                    <%= platform === 'Mobile'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Mobile
-                </option>
-
-                <option
-                    value="Nintendo Switch"
-                    <%= platform === 'Nintendo Switch'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Nintendo Switch
-                </option>
-            </select>
-
-            <select name="eventType">
-                <option value="">All Event Types</option>
-
-                <option
-                    value="Tournament"
-                    <%= eventType === 'Tournament'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Tournament
-                </option>
-
-                <option
-                    value="Ranked"
-                    <%= eventType === 'Ranked'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Ranked Session
-                </option>
-
-                <option
-                    value="Casual"
-                    <%= eventType === 'Casual'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Casual Match
-                </option>
-
-                <option
-                    value="Training"
-                    <%= eventType === 'Training'
-                        ? 'selected'
-                        : ''
-                    %>
-                >
-                    Training Session
-                </option>
-            </select>
-
-            <button
-                class="button primary-button"
-                type="submit"
-            >
-                Search
-            </button>
-
-            <a
-                class="button secondary-button"
-                href="/events"
-            >
-                Clear
-            </a>
-        </form>
-
-        <% if (!events || events.length === 0) { %>
-
-            <div class="no-events">
-                <h2>No events found</h2>
-
-                <p>
-                    Try using another keyword or changing
-                    the selected filters.
-                </p>
-            </div>
-
-        <% } else { %>
-
-            <section class="events-grid">
-
-                <% events.forEach(event => { %>
-
-                    <article class="event-card">
-
-                        <span class="event-type">
-                            <%= event.eventType %>
-                        </span>
-
-                        <h2><%= event.title %></h2>
-
-                        <p>
-                            <strong>Game:</strong>
-                            <%= event.gameName %>
-                        </p>
-
-                        <p>
-                            <strong>Platform:</strong>
-                            <%= event.platform %>
-                        </p>
-
-                        <p>
-                            <strong>Date:</strong>
-
-                            <%= new Date(
-                                event.eventDate
-                            ).toLocaleDateString('en-SG') %>
-                        </p>
-
-                        <p>
-                            <strong>Time:</strong>
-                            <%= event.eventTime %>
-                        </p>
-
-                        <p>
-                            <strong>Location/Server:</strong>
-                            <%= event.location || 'Not specified' %>
-                        </p>
-
-                        <p>
-                            <strong>Players:</strong>
-                            <%= event.currentPlayers %>
-                            /
-                            <%= event.maxPlayers %>
-                        </p>
-
-                        <% if (event.description) { %>
-                            <p>
-                                <strong>Description:</strong>
-                                <%= event.description %>
-                            </p>
-                        <% } %>
-
-                        <div class="event-actions">
-
-                            <% if (!user) { %>
-
-                                <a
-                                    class="button primary-button"
-                                    href="/login"
-                                >
-                                    Login to Join
-                                </a>
-
-                            <% } else if (event.hasJoined) { %>
-
-                                <form
-                                    action="/events/<%= event.eventId %>/leave"
-                                    method="POST"
-                                >
-                                    <button
-                                        class="button leave-button"
-                                        type="submit"
-                                    >
-                                        Leave Event
-                                    </button>
-                                </form>
-
-                            <% } else if (
-                                Number(event.currentPlayers) >=
-                                Number(event.maxPlayers)
-                            ) { %>
-
-                                <button
-                                    class="button disabled-button"
-                                    type="button"
-                                    disabled
-                                >
-                                    Event Full
-                                </button>
-
-                            <% } else { %>
-
-                                <form
-                                    action="/events/<%= event.eventId %>/join"
-                                    method="POST"
-                                >
-                                    <button
-                                        class="button join-button"
-                                        type="submit"
-                                    >
-                                        Join Event
-                                    </button>
-                                </form>
-
+                        <% if (error==='full' ) { %>
+                            <div class="message error-message">
+                                This event is already full.
+                            </div>
                             <% } %>
 
-                        </div>
+                                <% if (error==='alreadyJoined' ) { %>
+                                    <div class="message error-message">
+                                        You have already joined this event.
+                                    </div>
+                                    <% } %>
 
-                    </article>
+                                        <% if (error==='eventNotFound' ) { %>
+                                            <div class="message error-message">
+                                                The selected event could not be found.
+                                            </div>
+                                            <% } %>
 
-                <% }) %>
+                                                <form class="search-form" action="/events" method="GET">
+                                                    <input type="text" name="search"
+                                                        placeholder="Search by event title or game"
+                                                        value="<%= search || '' %>">
 
-            </section>
+                                                    <select name="platform">
+                                                        <option value="">All Platforms</option>
 
-        <% } %>
+                                                        <option value="PC" <%=platform==='PC' ? 'selected' : '' %>
+                                                            >
+                                                            PC
+                                                        </option>
+
+                                                        <option value="PlayStation" <%=platform==='PlayStation'
+                                                            ? 'selected' : '' %>
+                                                            >
+                                                            PlayStation
+                                                        </option>
+
+                                                        <option value="Xbox" <%=platform==='Xbox' ? 'selected' : '' %>
+                                                            >
+                                                            Xbox
+                                                        </option>
+
+                                                        <option value="Mobile" <%=platform==='Mobile' ? 'selected' : ''
+                                                            %>
+                                                            >
+                                                            Mobile
+                                                        </option>
+
+                                                        <option value="Nintendo Switch" <%=platform==='Nintendo Switch'
+                                                            ? 'selected' : '' %>
+                                                            >
+                                                            Nintendo Switch
+                                                        </option>
+                                                    </select>
+
+                                                    <select name="eventType">
+                                                        <option value="">All Event Types</option>
+
+                                                        <option value="Tournament" <%=eventType==='Tournament'
+                                                            ? 'selected' : '' %>
+                                                            >
+                                                            Tournament
+                                                        </option>
+
+                                                        <option value="Ranked" <%=eventType==='Ranked' ? 'selected' : ''
+                                                            %>
+                                                            >
+                                                            Ranked Session
+                                                        </option>
+
+                                                        <option value="Casual" <%=eventType==='Casual' ? 'selected' : ''
+                                                            %>
+                                                            >
+                                                            Casual Match
+                                                        </option>
+
+                                                        <option value="Training" <%=eventType==='Training' ? 'selected'
+                                                            : '' %>
+                                                            >
+                                                            Training Session
+                                                        </option>
+                                                    </select>
+
+                                                    <button class="button primary-button" type="submit">
+                                                        Search
+                                                    </button>
+
+                                                    <a class="button secondary-button" href="/events">
+                                                        Clear
+                                                    </a>
+                                                </form>
+
+                                                <% if (!events || events.length===0) { %>
+
+                                                    <div class="no-events">
+                                                        <h2>No events found</h2>
+
+                                                        <p>
+                                                            Try using another keyword or changing
+                                                            the selected filters.
+                                                        </p>
+                                                    </div>
+
+                                                    <% } else { %>
+
+                                                        <section class="events-grid">
+
+                                                            <% events.forEach(event=> { %>
+
+                                                                <article class="event-card">
+
+                                                                    <span class="event-type">
+                                                                        <%= event.eventType %>
+                                                                    </span>
+
+                                                                    <h2>
+                                                                        <%= event.title %>
+                                                                    </h2>
+
+                                                                    <p>
+                                                                        <strong>Game:</strong>
+                                                                        <%= event.gameName %>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <strong>Platform:</strong>
+                                                                        <%= event.platform %>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <strong>Date:</strong>
+
+                                                                        <%= new Date( event.eventDate
+                                                                            ).toLocaleDateString('en-SG') %>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <strong>Time:</strong>
+                                                                        <%= event.eventTime %>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <strong>Location/Server:</strong>
+                                                                        <%= event.location || 'Not specified' %>
+                                                                    </p>
+
+                                                                    <p>
+                                                                        <strong>Players:</strong>
+                                                                        <%= event.currentPlayers %>
+                                                                            /
+                                                                            <%= event.maxPlayers %>
+                                                                    </p>
+
+                                                                    <% if (event.description) { %>
+                                                                        <p>
+                                                                            <strong>Description:</strong>
+                                                                            <%= event.description %>
+                                                                        </p>
+                                                                        <% } %>
+
+                                                                            <div class="event-actions">
+
+                                                                                <% if (!user) { %>
+
+                                                                                    <a class="button primary-button"
+                                                                                        href="/login">
+                                                                                        Login to Join
+                                                                                    </a>
+
+                                                                                    <% } else if (event.hasJoined) { %>
+
+                                                                                        <form
+                                                                                            action="/events/<%= event.eventId %>/leave"
+                                                                                            method="POST">
+                                                                                            <button
+                                                                                                class="button leave-button"
+                                                                                                type="submit">
+                                                                                                Leave Event
+                                                                                            </button>
+                                                                                        </form>
+
+                                                                                        <% } else if (
+                                                                                            Number(event.currentPlayers)>
+                                                                                            =
+                                                                                            Number(event.maxPlayers)
+                                                                                            ) { %>
+
+                                                                                            <button
+                                                                                                class="button disabled-button"
+                                                                                                type="button" disabled>
+                                                                                                Event Full
+                                                                                            </button>
+
+                                                                                            <% } else { %>
+
+                                                                                                <form
+                                                                                                    action="/events/<%= event.eventId %>/join"
+                                                                                                    method="POST">
+                                                                                                    <button
+                                                                                                        class="button join-button"
+                                                                                                        type="submit">
+                                                                                                        Join Event
+                                                                                                    </button>
+                                                                                                </form>
+
+                                                                                                <% } %>
+
+                                                                            </div>
+
+                                                                </article>
+
+                                                                <% }) %>
+
+                                                        </section>
+
+                                                        <% } %>
 
     </main>
 
 </body>
+
 </html>
