@@ -173,30 +173,23 @@ h1 {
     margin: 0;
 }
 
-.no-events {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.container form {
+.container > form:not(.search-form) {
     background-color: white;
     padding: 25px;
     border-radius: 8px;
     max-width: 600px;
 }
 
-.container form label {
+.container > form:not(.search-form) label {
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.container form input,
-.container form select,
-.container form textarea {
+.container > form:not(.search-form) input,
+.container > form:not(.search-form) select,
+.container > form:not(.search-form) textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #bbb;
@@ -204,8 +197,45 @@ h1 {
     font-size: 15px;
 }
 
-.container form button,
-.container form .button {
+.container > form:not(.search-form) button,
+.container > form:not(.search-form) .button {
     margin-top: 20px;
     width: auto;
+}
+
+/* Event action button row */
+.event-actions {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.event-actions form {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    max-width: none;
+    display: flex;
+}
+
+.event-actions .button {
+    width: 110px;
+    height: 42px;
+    margin: 0;
+    padding: 0 12px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 5px;
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
 }
