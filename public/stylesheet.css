@@ -179,3 +179,33 @@ h1 {
     border-radius: 8px;
     text-align: center;
 }
+
+.container form {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 600px;
+}
+
+.container form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.container form input,
+.container form select,
+.container form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.container form button,
+.container form .button {
+    margin-top: 20px;
+    width: auto;
+}
