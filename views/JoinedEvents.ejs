@@ -2,116 +2,153 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>My Joined Events</title>
 
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            background:#f5f5f5;
-            margin:40px;
-        }
-
-        .container{
-            max-width:900px;
-            margin:auto;
-        }
-
-        .card{
-            background:white;
-            border-radius:8px;
-            padding:20px;
-            margin-bottom:20px;
-            box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
-
-        a{
-            text-decoration:none;
-            color:#0066cc;
-        }
-
-        button{
-            background:#dc3545;
-            color:white;
-            border:none;
-            padding:10px 18px;
-            border-radius:5px;
-            cursor:pointer;
-        }
-
-        button:hover{
-            background:#bb2d3b;
-        }
-    </style>
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
 
-<div class="container">
+    <nav>
+        <h2>Gaming Event Planner</h2>
 
-    <h1>My Joined Events</h1>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/events">Browse Events</a>
+            <a href="/joined-events">Joined Events</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
 
-    <p>
-        <a href="/events">← Back to Browse Events</a>
-    </p>
+    <main class="container">
 
-    <% if(events.length === 0){ %>
+        <h1>My Joined Events</h1>
 
-        <p>You have not joined any events yet.</p>
+        <p>
+            These are the gaming events that you have joined.
+        </p>
 
-    <% } else { %>
+        <% if (messages && messages.length > 0) { %>
 
-        <% events.forEach(event => { %>
+            <% messages.forEach(message => { %>
+                <div class="message success">
+                    <%= message %>
+                </div>
+            <% }) %>
 
-            <div class="card">
+        <% } %>
 
-                <h2><%= event.title %></h2>
+        <% if (errors && errors.length > 0) { %>
+
+            <% errors.forEach(error => { %>
+                <div class="message error">
+                    <%= error %>
+                </div>
+            <% }) %>
+
+        <% } %>
+
+        <a class="browse-button" href="/events">
+            Browse More Events
+        </a>
+
+        <% if (!events || events.length === 0) { %>
+
+            <div class="empty-message">
+                <h2>No joined events</h2>
 
                 <p>
-                    <strong>Game:</strong>
-                    <%= event.gameName %>
+                    You have not joined any events yet.
                 </p>
-
-                <p>
-                    <strong>Platform:</strong>
-                    <%= event.platform %>
-                </p>
-
-                <p>
-                    <strong>Type:</strong>
-                    <%= event.eventType %>
-                </p>
-
-                <p>
-                    <strong>Date:</strong>
-                    <%= event.eventDate %>
-                </p>
-
-                <p>
-                    <strong>Time:</strong>
-                    <%= event.eventTime %>
-                </p>
-
-                <p>
-                    <strong>Location:</strong>
-                    <%= event.location %>
-                </p>
-
-                <form action="/events/<%= event.eventId %>/leave" method="POST">
-
-                    <button type="submit">
-                        Leave Event
-                    </button>
-
-                </form>
-
             </div>
 
-        <% }) %>
+        <% } else { %>
 
-    <% } %>
+            <section class="events-grid">
 
-</div>
+                <% events.forEach(event => { %>
+
+                    <article class="event-card">
+
+                        <h2><%= event.title %></h2>
+
+                        <p>
+                            <strong>Game:</strong>
+                            <%= event.gameName %>
+                        </p>
+
+                        <p>
+                            <strong>Platform:</strong>
+                            <%= event.platform %>
+                        </p>
+
+                        <p>
+                            <strong>Event Type:</strong>
+                            <%= event.eventType %>
+                        </p>
+
+                        <p>
+                            <strong>Date:</strong>
+
+                            <%= new Date(
+                                event.eventDate
+                            ).toLocaleDateString('en-SG') %>
+                        </p>
+
+                        <p>
+                            <strong>Time:</strong>
+                            <%= event.eventTime %>
+                        </p>
+
+                        <p>
+                            <strong>Location:</strong>
+                            <%= event.location %>
+                        </p>
+
+                        <% if (event.description) { %>
+
+                            <p>
+                                <strong>Description:</strong>
+                                <%= event.description %>
+                            </p>
+
+                        <% } %>
+
+                        <p>
+                            <strong>Joined on:</strong>
+
+                            <%= new Date(
+                                event.joinedAt
+                            ).toLocaleString('en-SG') %>
+                        </p>
+
+                        <form
+                            action="/events/<%= event.eventId %>/leave"
+                            method="POST"
+                        >
+                            <button
+                                class="leave-button"
+                                type="submit"
+                            >
+                                Leave Event
+                            </button>
+                        </form>
+
+                    </article>
+
+                <% }) %>
+
+            </section>
+
+        <% } %>
+
+    </main>
 
 </body>
 </html>
