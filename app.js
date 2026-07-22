@@ -270,6 +270,276 @@ app.get(
     }
 );
 
+const validateEvent = (req, res, next) => {
+    const redirectTo = req.params.id
+        ? `/events/${req.params.id}/edit`
+        : '/events/add';
+
+    const {
+        title, gameName, platform, eventType,
+        eventDate, eventTime, maxPlayers
+    } = req.body;
+
+    if (!title || !gameName || !platform || !eventType ||
+        !eventDate || !eventTime || !maxPlayers) {
+        req.flash('error', 'Please fill in all required fields.');
+        req.flash('formData', req.body);
+        return res.redirect(redirectTo);
+    }
+
+    const players = Number.parseInt(maxPlayers, 10);
+
+    if (!Number.isInteger(players) || players < 2 || players > 100) {
+        req.flash('error', 'Max players must be a whole number between 2 and 100.');
+        req.flash('formData', req.body);
+        return res.redirect(redirectTo);
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (new Date(eventDate) < today) {
+        req.flash('error', 'Event date cannot be in the past.');
+        req.flash('formData', req.body);
+        return res.redirect(redirectTo);
+    }
+
+    next();
+};
+
+// add events
+app.get('/events/add', checkAuthenticated, (req, res) => {
+    res.render('addEvent', {
+        user: req.session.user,
+        errors: req.flash('error'),
+        formData: req.flash('formData')[0]
+    });
+});
+
+app.post('/events/add', checkAuthenticated, validateEvent, (req, res) => {
+    const {
+        title, gameName, platform, eventType,
+        eventDate, eventTime, location, maxPlayers, description
+    } = req.body;
+
+    const sql = `
+        INSERT INTO events
+            (title, gameName, platform, eventType,
+             eventDate, eventTime, location, maxPlayers,
+             description, createdBy)
+        VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(
+        sql,
+        [
+            title, gameName, platform, eventType,
+            eventDate, eventTime, location || null,
+            Number.parseInt(maxPlayers, 10),
+            description || null,
+            req.session.user.userId
+        ],
+        (err) => {
+            if (err) {
+                console.error('Error creating event:', err);
+                return res.status(500).send('Unable to create event');
+            }
+            res.redirect('/events?success=created');
+        }
+    );
+});
+
+
+//view events
+
+app.get('/my-events', checkAuthenticated, (req, res) => {
+    const sql = `
+        SELECT
+            e.*,
+            COUNT(ep.participantId) AS currentPlayers
+
+        FROM events e
+
+        LEFT JOIN event_participants ep
+            ON e.eventId = ep.eventId
+
+        WHERE e.createdBy = ?
+
+        GROUP BY e.eventId
+
+        ORDER BY
+            e.eventDate ASC,
+            e.eventTime ASC
+    `;
+
+    db.query(sql, [req.session.user.userId], (err, results) => {
+        if (err) {
+            console.error('Error retrieving your events:', err);
+            return res.status(500).send('Unable to retrieve your events');
+        }
+
+        res.render('myEvents', {
+            events: results,
+            user: req.session.user,
+            success: req.query.success || null,
+            error: req.query.error || null
+        });
+    });
+});
+
+
+//edit events
+
+app.get('/events/:id/edit', checkAuthenticated, (req, res) => {
+    const eventId = Number.parseInt(req.params.id, 10);
+
+    if (!Number.isInteger(eventId)) {
+        return res.redirect('/my-events?error=eventNotFound');
+    }
+
+    db.query(
+        'SELECT * FROM events WHERE eventId = ?',
+        [eventId],
+        (err, results) => {
+            if (err) {
+                console.error('Error retrieving event:', err);
+                return res.status(500).send('Database error');
+            }
+
+            if (results.length === 0) {
+                return res.redirect('/my-events?error=eventNotFound');
+            }
+
+            const event = results[0];
+            const isOwner = event.createdBy === req.session.user.userId;
+            const isAdmin = req.session.user.role === 'admin';
+
+            if (!isOwner && !isAdmin) {
+                return res.redirect('/events?error=notAllowed');
+            }
+
+            res.render('editEvent', {
+                user: req.session.user,
+                event,
+                errors: req.flash('error'),
+                formData: req.flash('formData')[0]
+            });
+        }
+    );
+});
+
+app.post('/events/:id/edit', checkAuthenticated, validateEvent, (req, res) => {
+    const eventId = Number.parseInt(req.params.id, 10);
+
+    const {
+        title, gameName, platform, eventType,
+        eventDate, eventTime, location, maxPlayers, description
+    } = req.body;
+
+    db.query(
+        'SELECT createdBy FROM events WHERE eventId = ?',
+        [eventId],
+        (err, results) => {
+            if (err || results.length === 0) {
+                return res.redirect('/my-events?error=eventNotFound');
+            }
+
+            const isOwner = results[0].createdBy === req.session.user.userId;
+            const isAdmin = req.session.user.role === 'admin';
+
+            if (!isOwner && !isAdmin) {
+                return res.redirect('/events?error=notAllowed');
+            }
+
+            const sql = `
+                UPDATE events
+                SET title = ?, gameName = ?, platform = ?, eventType = ?,
+                    eventDate = ?, eventTime = ?, location = ?,
+                    maxPlayers = ?, description = ?
+                WHERE eventId = ?
+            `;
+
+            db.query(
+                sql,
+                [
+                    title, gameName, platform, eventType,
+                    eventDate, eventTime, location || null,
+                    Number.parseInt(maxPlayers, 10),
+                    description || null,
+                    eventId
+                ],
+                (updateError) => {
+                    if (updateError) {
+                        console.error('Error updating event:', updateError);
+                        return res.status(500).send('Unable to update event');
+                    }
+
+                    res.redirect('/my-events?success=updated');
+                }
+            );
+        }
+    );
+});
+
+//delete events
+app.post('/events/:id/delete', checkAuthenticated, (req, res) => {
+    const eventId = Number.parseInt(req.params.id, 10);
+
+    if (!Number.isInteger(eventId)) {
+        return res.redirect('/my-events?error=eventNotFound');
+    }
+
+    db.query(
+        'SELECT createdBy FROM events WHERE eventId = ?',
+        [eventId],
+        (err, results) => {
+            if (err) {
+                console.error('Error checking event owner:', err);
+                return res.status(500).send('Database error');
+            }
+
+            if (results.length === 0) {
+                return res.redirect('/my-events?error=eventNotFound');
+            }
+
+            const isOwner = results[0].createdBy === req.session.user.userId;
+            const isAdmin = req.session.user.role === 'admin';
+
+            if (!isOwner && !isAdmin) {
+                return res.redirect('/events?error=notAllowed');
+            }
+            db.query(
+                'DELETE FROM event_participants WHERE eventId = ?',
+                [eventId],
+                (participantError) => {
+                    if (participantError) {
+                        console.error(
+                            'Error removing participants:',
+                            participantError
+                        );
+
+                        return res.status(500).send('Database error');
+                    }
+
+                    db.query(
+                        'DELETE FROM events WHERE eventId = ?',
+                        [eventId],
+                        (deleteError) => {
+                            if (deleteError) {
+                                console.error('Error deleting event:', deleteError);
+                                return res.status(500).send('Unable to delete event');
+                            }
+
+                            res.redirect('/my-events?success=deleted');
+                        }
+                    );
+                }
+            );
+        }
+    );
+});
+
 
 
 app.get('/events', (req, res) => {
@@ -398,11 +668,6 @@ app.post(
                 '/events?error=eventNotFound'
             );
         }
-
-        /*
-         * First, retrieve the event and count how many
-         * users have already joined it.
-         */
         const eventSql = `
             SELECT
                 e.eventId,
@@ -447,10 +712,6 @@ app.post(
 
                 const event = eventResults[0];
 
-                /*
-                 * Prevent users from joining when the
-                 * maximum number of players is reached.
-                 */
                 if (
                     Number(event.currentPlayers) >=
                     Number(event.maxPlayers)
@@ -459,11 +720,6 @@ app.post(
                         '/events?error=full'
                     );
                 }
-
-                /*
-                 * Check whether the user has already
-                 * joined this particular event.
-                 */
                 const duplicateSql = `
                     SELECT participantId
                     FROM event_participants
@@ -498,10 +754,6 @@ app.post(
                             );
                         }
 
-                        /*
-                         * Add the user's participation
-                         * record to the database.
-                         */
                         const insertSql = `
                             INSERT INTO event_participants
                                 (eventId, userId)
@@ -519,10 +771,6 @@ app.post(
                                         insertError
                                     );
 
-                                    /*
-                                     * Error 1062 is a
-                                     * duplicate record.
-                                     */
                                     if (
                                         insertError.errno ===
                                         1062
