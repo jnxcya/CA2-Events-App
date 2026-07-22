@@ -46,11 +46,6 @@
                 value="<%= formData && formData.gameName ? formData.gameName : event.gameName %>">
 
             <%
-                /*
-                 * currentPlatform holds either the value the user just
-                 * typed (when validation failed) or the value stored in
-                 * the database, so the correct option stays selected.
-                 */
                 const currentPlatform =
                     formData && formData.platform
                         ? formData.platform
@@ -84,10 +79,6 @@
             </select>
 
             <%
-                /*
-                 * A date input only accepts the YYYY-MM-DD format, so the
-                 * value coming back from MySQL has to be reformatted.
-                 */
                 const storedDate = new Date(event.eventDate)
                     .toISOString()
                     .split('T')[0];

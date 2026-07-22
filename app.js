@@ -270,20 +270,6 @@ app.get(
     }
 );
 
-
-
-/* ==========================================================
- * EVENT MANAGEMENT (Member 2)
- * Add / View own / Edit / Delete
- * ========================================================== */
-
-/*
- * Shared validation for both the add and edit forms.
- *
- * CHANGED: the redirect target is now worked out from the
- * route. When req.params.id exists we are editing, so the
- * user is sent back to the edit form instead of the add form.
- */
 const validateEvent = (req, res, next) => {
     const redirectTo = req.params.id
         ? `/events/${req.params.id}/edit`
@@ -321,9 +307,7 @@ const validateEvent = (req, res, next) => {
     next();
 };
 
-
-/* ---------- ADD ---------- */
-
+// add events
 app.get('/events/add', checkAuthenticated, (req, res) => {
     res.render('addEvent', {
         user: req.session.user,
@@ -361,19 +345,13 @@ app.post('/events/add', checkAuthenticated, validateEvent, (req, res) => {
                 console.error('Error creating event:', err);
                 return res.status(500).send('Unable to create event');
             }
-
-            /*
-             * CHANGED: use a query string instead of flash, because
-             * events.ejs displays messages from req.query, not from
-             * the flash array.
-             */
             res.redirect('/events?success=created');
         }
     );
 });
 
 
-/* ---------- VIEW OWN EVENTS ---------- */
+//view events
 
 app.get('/my-events', checkAuthenticated, (req, res) => {
     const sql = `
@@ -411,7 +389,7 @@ app.get('/my-events', checkAuthenticated, (req, res) => {
 });
 
 
-/* ---------- EDIT ---------- */
+//edit events
 
 app.get('/events/:id/edit', checkAuthenticated, (req, res) => {
     const eventId = Number.parseInt(req.params.id, 10);
@@ -445,12 +423,6 @@ app.get('/events/:id/edit', checkAuthenticated, (req, res) => {
                 user: req.session.user,
                 event,
                 errors: req.flash('error'),
-
-                /*
-                 * CHANGED: formData is passed so that a failed
-                 * validation redisplays what the user typed rather
-                 * than resetting to the stored values.
-                 */
                 formData: req.flash('formData')[0]
             });
         }
@@ -510,9 +482,7 @@ app.post('/events/:id/edit', checkAuthenticated, validateEvent, (req, res) => {
     );
 });
 
-
-/* ---------- DELETE ---------- */
-
+//delete events
 app.post('/events/:id/delete', checkAuthenticated, (req, res) => {
     const eventId = Number.parseInt(req.params.id, 10);
 
@@ -539,12 +509,6 @@ app.post('/events/:id/delete', checkAuthenticated, (req, res) => {
             if (!isOwner && !isAdmin) {
                 return res.redirect('/events?error=notAllowed');
             }
-
-            /*
-             * Participation records are removed first so that the
-             * foreign key on event_participants does not block the
-             * deletion of the event itself.
-             */
             db.query(
                 'DELETE FROM event_participants WHERE eventId = ?',
                 [eventId],
@@ -704,11 +668,6 @@ app.post(
                 '/events?error=eventNotFound'
             );
         }
-
-        /*
-         * First, retrieve the event and count how many
-         * users have already joined it.
-         */
         const eventSql = `
             SELECT
                 e.eventId,
@@ -753,10 +712,6 @@ app.post(
 
                 const event = eventResults[0];
 
-                /*
-                 * Prevent users from joining when the
-                 * maximum number of players is reached.
-                 */
                 if (
                     Number(event.currentPlayers) >=
                     Number(event.maxPlayers)
@@ -765,11 +720,6 @@ app.post(
                         '/events?error=full'
                     );
                 }
-
-                /*
-                 * Check whether the user has already
-                 * joined this particular event.
-                 */
                 const duplicateSql = `
                     SELECT participantId
                     FROM event_participants
@@ -804,10 +754,6 @@ app.post(
                             );
                         }
 
-                        /*
-                         * Add the user's participation
-                         * record to the database.
-                         */
                         const insertSql = `
                             INSERT INTO event_participants
                                 (eventId, userId)
@@ -825,10 +771,6 @@ app.post(
                                         insertError
                                     );
 
-                                    /*
-                                     * Error 1062 is a
-                                     * duplicate record.
-                                     */
                                     if (
                                         insertError.errno ===
                                         1062

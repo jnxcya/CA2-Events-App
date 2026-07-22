@@ -46,10 +46,6 @@
                 value="<%= formData && formData.gameName ? formData.gameName : '' %>">
 
             <%
-                /*
-                 * The previously submitted value is kept so that a failed
-                 * validation does not reset the dropdown.
-                 */
                 const currentPlatform =
                     formData && formData.platform
                         ? formData.platform
