@@ -558,7 +558,7 @@ app.get('/events', (req, res) => {
             ? req.query.eventType.trim()
             : '';
 
-    
+
     const loggedInUserId = req.session.user
         ? req.session.user.userId
         : 0;
