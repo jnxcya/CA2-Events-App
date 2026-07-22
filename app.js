@@ -5,16 +5,26 @@ const flash = require('connect-flash');
 
 const app = express();
 
+// const db = mysql.createConnection({
+//     host: '127.0.0.1',
+//     user: 'root',
+//     password: 'RP738964$',
+//     database: 'eventsdb',
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
+// });
+
+// [C237-020] Database connection to Azure MySQL Database
 const db = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'RP738964$',
-    database: 'eventsdb',
+    host: 'c237-annie-mysql.mysql.database.azure.com',
+    user: 'c237_020',
+    password: 'c237020@2026!',
+    database: 'c237_020_ca2team4',
     ssl: {
         rejectUnauthorized: false
     }
 });
-
 
 
 db.connect((err) => {
