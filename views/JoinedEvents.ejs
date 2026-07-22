@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -15,24 +17,37 @@
 <body class="joined-page">
 
     <nav class="joined-navbar">
+
         <a href="/" class="joined-logo">
             Gaming Event Planner
         </a>
 
         <div class="joined-nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/events">Browse Events</a>
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/events">
+                Browse Events
+            </a>
+
             <a href="/joined-events" class="active">
                 Joined Events
             </a>
-            <a href="/logout">Logout</a>
+
+            <a href="/logout">
+                Logout
+            </a>
         </div>
+
     </nav>
 
     <main class="joined-container">
 
-        <div class="joined-page-header">
-            <div>
+        <header class="joined-page-header">
+
+            <div class="joined-header-text">
+
                 <p class="joined-label">
                     Event Discovery
                 </p>
@@ -40,9 +55,9 @@
                 <h1>My Joined Events</h1>
 
                 <p class="joined-description">
-                    View and manage the gaming events
-                    that you have joined.
+                    View and manage the gaming events that you have joined.
                 </p>
+
             </div>
 
             <a
@@ -51,27 +66,37 @@
             >
                 Browse More Events
             </a>
-        </div>
+
+        </header>
 
         <% if (messages && messages.length > 0) { %>
+
             <% messages.forEach(message => { %>
+
                 <div class="joined-alert joined-success">
                     <%= message %>
                 </div>
+
             <% }) %>
+
         <% } %>
 
         <% if (errors && errors.length > 0) { %>
+
             <% errors.forEach(error => { %>
+
                 <div class="joined-alert joined-error">
                     <%= error %>
                 </div>
+
             <% }) %>
+
         <% } %>
 
         <% if (!events || events.length === 0) { %>
 
             <section class="joined-empty-card">
+
                 <div class="joined-empty-icon">
                     🎮
                 </div>
@@ -79,9 +104,9 @@
                 <h2>No joined events yet</h2>
 
                 <p>
-                    You have not joined any events.
-                    Browse the available gaming events
-                    and join one that interests you.
+                    You have not joined any gaming events yet.
+                    Browse the available events and join one that
+                    interests you.
                 </p>
 
                 <a
@@ -90,6 +115,7 @@
                 >
                     Explore Events
                 </a>
+
             </section>
 
         <% } else { %>
@@ -101,112 +127,147 @@
                     <article class="joined-event-card">
 
                         <div class="joined-card-top">
+
                             <span class="joined-type-badge">
-                                <%= event.eventType %>
+                                <%= event.eventType || 'Gaming Event' %>
                             </span>
 
                             <span class="joined-status">
                                 Joined
                             </span>
+
                         </div>
 
-                        <h2><%= event.title %></h2>
+                        <h2 class="joined-event-title">
+                            <%= event.title %>
+                        </h2>
 
                         <p class="joined-event-description">
-                            <%= event.description ||
-                                'No description provided.' %>
+                            <%= event.description || 'No description provided.' %>
                         </p>
 
                         <div class="joined-event-details">
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
                                     Game
                                 </span>
 
                                 <strong>
-                                    <%= event.gameName %>
+                                    <%= event.gameName || 'Not specified' %>
                                 </strong>
+
                             </div>
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
                                     Platform
                                 </span>
 
                                 <strong>
-                                    <%= event.platform %>
+                                    <%= event.platform || 'Not specified' %>
                                 </strong>
+
                             </div>
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
                                     Date
                                 </span>
 
                                 <strong>
-                                    <%= new Date(
-                                        event.eventDate
-                                    ).toLocaleDateString(
-                                        'en-SG'
-                                    ) %>
+                                    <% if (event.eventDate) { %>
+
+                                        <%= new Date(
+                                            event.eventDate
+                                        ).toLocaleDateString('en-SG') %>
+
+                                    <% } else { %>
+
+                                        Not specified
+
+                                    <% } %>
                                 </strong>
+
                             </div>
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
                                     Time
                                 </span>
 
                                 <strong>
-                                    <%= event.eventTime %>
+                                    <%= event.eventTime || 'Not specified' %>
                                 </strong>
+
                             </div>
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
-                                    Location
+                                    Location / Server
                                 </span>
 
                                 <strong>
-                                    <%= event.location %>
+                                    <%= event.location || 'Not specified' %>
                                 </strong>
+
                             </div>
 
-                            <div>
+                            <div class="joined-detail-item">
+
                                 <span class="joined-detail-label">
-                                    Joined on
+                                    Players
                                 </span>
 
                                 <strong>
-                                    <%= new Date(
-                                        event.joinedAt
-                                    ).toLocaleDateString(
-                                        'en-SG'
-                                    ) %>
+                                    <%= event.currentPlayers || 0 %>
+                                    /
+                                    <%= event.maxPlayers || 0 %>
                                 </strong>
+
                             </div>
+
+                            <% if (event.joinedAt) { %>
+
+                                <div class="joined-detail-item">
+
+                                    <span class="joined-detail-label">
+                                        Joined on
+                                    </span>
+
+                                    <strong>
+                                        <%= new Date(
+                                            event.joinedAt
+                                        ).toLocaleDateString('en-SG') %>
+                                    </strong>
+
+                                </div>
+
+                            <% } %>
 
                         </div>
 
-                        <div class="joined-card-footer">
+                        <footer class="joined-card-footer">
 
                             <form
                                 action="/events/<%= event.eventId %>/leave"
                                 method="POST"
+                                onsubmit="return confirm('Are you sure you want to leave this event?');"
                             >
                                 <button
                                     type="submit"
                                     class="joined-leave-button"
-                                    onclick="return confirm(
-                                        'Are you sure you want to leave this event?'
-                                    )"
                                 >
                                     Leave Event
                                 </button>
                             </form>
 
-                        </div>
+                        </footer>
 
                     </article>
 
@@ -219,4 +280,5 @@
     </main>
 
 </body>
+
 </html>
