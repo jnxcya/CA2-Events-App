@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics | Gaming Event Planner</title>
+
+    <link rel="stylesheet" href="/css/stylesheet.css">
+
+    <style>
+
+        body{
+            background:#111827;
+            color:white;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        nav{
+            background:#1f2937;
+            padding:20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-left:18px;
+        }
+
+        .brand{
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .container{
+            width:90%;
+            max-width:1200px;
+            margin:40px auto;
+        }
+
+        h1{
+            margin-bottom:25px;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-bottom:40px;
+        }
+
+        .card{
+            background:#1f2937;
+            border-radius:15px;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 5px 15px rgba(0,0,0,.4);
+        }
+
+        .card h2{
+            color:#38bdf8;
+            font-size:42px;
+            margin-bottom:10px;
+        }
+
+        .table-box{
+            background:#1f2937;
+            padding:20px;
+            border-radius:15px;
+            margin-bottom:35px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#2563eb;
+            padding:15px;
+        }
+
+        td{
+            padding:15px;
+            border-bottom:1px solid #374151;
+        }
+
+        tr:hover{
+            background:#2b3647;
+        }
+
+        h2{
+            margin-bottom:15px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<nav>
+
+    <a class="brand" href="/">🎮 Gaming Event Planner</a>
+
+    <div>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/events">Browse Events</a>
+        <a href="/events/add">Create Event</a>
+        <a href="/my-events">My Events</a>
+        <a href="/joined-events">Joined Events</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+<div class="container">
+
+    <h1>📊 Website Statistics</h1>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2><%= totalUsers %></h2>
+
+            <p>Total Registered Users</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2><%= totalEvents %></h2>
+
+            <p>Total Events</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-box">
+
+        <h2>🎮 Events by Game</h2>
+
+        <table>
+
+            <tr>
+
+                <th>Game</th>
+
+                <th>Total Events</th>
+
+            </tr>
+
+            <% games.forEach(game=>{ %>
+
+            <tr>
+
+                <td><%= game.gameName %></td>
+
+                <td><%= game.total %></td>
+
+            </tr>
+
+            <% }) %>
+
+        </table>
+
+    </div>
+
+
+
+    <div class="table-box">
+
+        <h2>💻 Events by Platform</h2>
+
+        <table>
+
+            <tr>
+
+                <th>Platform</th>
+
+                <th>Total Events</th>
+
+            </tr>
+
+            <% platforms.forEach(platform=>{ %>
+
+            <tr>
+
+                <td><%= platform.platform %></td>
+
+                <td><%= platform.total %></td>
+
+            </tr>
+
+            <% }) %>
+
+        </table>
+
+    </div>
+
+
+
+    <div class="table-box">
+
+        <h2>🏆 Most Popular Events</h2>
+
+        <table>
+
+            <tr>
+
+                <th>Event</th>
+
+                <th>Participants</th>
+
+            </tr>
+
+            <% popular.forEach(event=>{ %>
+
+            <tr>
+
+                <td><%= event.title %></td>
+
+                <td><%= event.participants %></td>
+
+            </tr>
+
+            <% }) %>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
