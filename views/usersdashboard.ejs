@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | Gaming Event Planner</title>
+
+    <link rel="stylesheet" href="/css/stylesheet.css">
+
+    <style>
+
+        body{
+            margin:0;
+            background:#111827;
+            color:white;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        nav{
+            background:#1f2937;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:18px 40px;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-left:18px;
+        }
+
+        .brand{
+            font-size:24px;
+            font-weight:bold;
+        }
+
+        .container{
+            width:90%;
+            max-width:1200px;
+            margin:40px auto;
+        }
+
+        .welcome{
+            background:#1f2937;
+            padding:25px;
+            border-radius:12px;
+            margin-bottom:30px;
+        }
+
+        .welcome h1{
+            margin:0;
+            color:#60a5fa;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-bottom:40px;
+        }
+
+        .card{
+            background:#1f2937;
+            padding:25px;
+            border-radius:12px;
+            text-align:center;
+            box-shadow:0 0 10px rgba(0,0,0,.4);
+        }
+
+        .card h2{
+            font-size:42px;
+            color:#38bdf8;
+            margin-bottom:10px;
+        }
+
+        .card p{
+            font-size:18px;
+        }
+
+        .section{
+            background:#1f2937;
+            border-radius:12px;
+            padding:25px;
+            margin-bottom:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#2563eb;
+            padding:12px;
+        }
+
+        td{
+            padding:12px;
+            border-bottom:1px solid #374151;
+        }
+
+        .buttons{
+            display:flex;
+            flex-wrap:wrap;
+            gap:15px;
+            margin-top:20px;
+        }
+
+        .btn{
+            background:#2563eb;
+            color:white;
+            text-decoration:none;
+            padding:12px 20px;
+            border-radius:8px;
+        }
+
+        .btn:hover{
+            background:#1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <a href="/" class="brand">🎮 Gaming Event Planner</a>
+
+    <div>
+
+        <a href="/events">Browse Events</a>
+        <a href="/events/add">Create Event</a>
+        <a href="/my-events">My Events</a>
+        <a href="/joined-events">Joined Events</a>
+        <a href="/statistics">Statistics</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>👤 User Dashboard</h1>
+
+        <p>Welcome back, <strong><%= user.username %></strong>!</p>
+
+        <p>Role: <%= user.role %></p>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2><%= totalCreated %></h2>
+
+            <p>Events Created</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2><%= totalJoined %></h2>
+
+            <p>Events Joined</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2><%= upcomingEvents.length %></h2>
+
+            <p>Upcoming Events</p>
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>📅 Upcoming Events</h2>
+
+        <% if(upcomingEvents.length === 0){ %>
+
+            <p>You have no upcoming events.</p>
+
+        <% } else { %>
+
+        <table>
+
+            <tr>
+
+                <th>Title</th>
+                <th>Game</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Platform</th>
+
+            </tr>
+
+            <% upcomingEvents.forEach(event=>{ %>
+
+            <tr>
+
+                <td><%= event.title %></td>
+
+                <td><%= event.gameName %></td>
+
+                <td>
+                    <%= new Date(event.eventDate).toLocaleDateString('en-SG') %>
+                </td>
+
+                <td><%= event.eventTime %></td>
+
+                <td><%= event.platform %></td>
+
+            </tr>
+
+            <% }) %>
+
+        </table>
+
+        <% } %>
+
+    </div>
+
+    <div class="section">
+
+        <h2>⚡ Quick Actions</h2>
+
+        <div class="buttons">
+
+            <a href="/events/add" class="btn">
+                ➕ Create Event
+            </a>
+
+            <a href="/events" class="btn">
+                🎮 Browse Events
+            </a>
+
+            <a href="/my-events" class="btn">
+                📋 My Events
+            </a>
+
+            <a href="/joined-events" class="btn">
+                👥 Joined Events
+            </a>
+
+            <a href="/profile" class="btn">
+                👤 My Profile
+            </a>
+
+            <a href="/statistics" class="btn">
+                📊 Statistics
+            </a>
+
+            <% if(user.role === "admin"){ %>
+
+                <a href="/admin" class="btn">
+                    ⚙ Admin Dashboard
+                </a>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
