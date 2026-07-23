@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/stylesheet.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="mt-5">Dashboard</h1>
-        <p>Welcome, <%= user.username %> (<%= user.role %>)</p>
-        <% if (user.role === 'admin') { %>
-            <a href="/admin" class="btn btn-primary">Admin Dashboard!</a>
-        <% } %>
-        <a href="/logout" class="btn btn-primary">Logout</a>
+    <!-- Navigation Bar -->
+    <nav class="navbar navrbar-expand">
+        <div class="admin-container">
+            <a class="navbar-brand" href="/admin">
+                Game Events Admin
+            </a>
+            <ul class="admin-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">Manage Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/manageevents">Manage Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/usersdashboard">Users Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <h1>
+            Welcome <%= user.username %>
+        </h1>
+        <p class="dashbpard-subtitle">
+            Administrator Dashboard
+        </p>
     </div>
 </body>
+
 </html>
