@@ -255,7 +255,7 @@ app.post('/login', (req, res) => {
 
 
 
-app.get('/dashboard', checkAuthenticated, (req, res) => {
+app.get('/user-dashboard', checkAuthenticated, (req, res) => {
 
     const userId = req.session.user.userId;
 
@@ -280,27 +280,27 @@ app.get('/dashboard', checkAuthenticated, (req, res) => {
         LIMIT 5
     `;
 
-    db.query(createdSql, [userId], (err, createdResult) => {
+    db.query(createdSql,[userId],(err,createdResult)=>{
 
-        if (err) return res.status(500).send(err);
+        if(err) return res.status(500).send(err);
 
-        db.query(joinedSql, [userId], (err, joinedResult) => {
+        db.query(joinedSql,[userId],(err,joinedResult)=>{
 
-            if (err) return res.status(500).send(err);
+            if(err) return res.status(500).send(err);
 
-            db.query(upcomingSql, [userId], (err, upcomingResult) => {
+            db.query(upcomingSql,[userId],(err,upcomingResult)=>{
 
-                if (err) return res.status(500).send(err);
+                if(err) return res.status(500).send(err);
 
-                res.render('dashboard', {
+                res.render("userDashboard",{
 
-                    user: req.session.user,
+                    user:req.session.user,
 
-                    totalCreated: createdResult[0].totalCreated,
+                    totalCreated:createdResult[0].totalCreated,
 
-                    totalJoined: joinedResult[0].totalJoined,
+                    totalJoined:joinedResult[0].totalJoined,
 
-                    upcomingEvents: upcomingResult
+                    upcomingEvents:upcomingResult
 
                 });
 
