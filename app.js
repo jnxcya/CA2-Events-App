@@ -255,40 +255,62 @@ app.post('/login', (req, res) => {
 
 
 
-// app.get(
-//     '/dashboard',
-//     checkAuthenticated,
-//     (req, res) => {
-//         res.render('dashboard', {
-//             user: req.session.user,
-//             messages: req.flash('success'),
-//             errors: req.flash('error')
-//         });
-//     }
-// );
+app.get('/dashboard', checkAuthenticated, (req, res) => {
 
-app.get(
-    '/dashboard',
-    checkAuthenticated,
-    (req, res) => {
+    const userId = req.session.user.userId;
 
-        if (req.session.user.role === 'admin') {
+    const createdSql = `
+        SELECT COUNT(*) AS totalCreated
+        FROM events
+        WHERE createdBy = ?
+    `;
 
-            res.render('dashboard', {
-                user: req.session.user
+    const joinedSql = `
+        SELECT COUNT(*) AS totalJoined
+        FROM event_participants
+        WHERE userId = ?
+    `;
+
+    const upcomingSql = `
+        SELECT *
+        FROM events
+        WHERE createdBy = ?
+        AND eventDate >= CURDATE()
+        ORDER BY eventDate ASC
+        LIMIT 5
+    `;
+
+    db.query(createdSql, [userId], (err, createdResult) => {
+
+        if (err) return res.status(500).send(err);
+
+        db.query(joinedSql, [userId], (err, joinedResult) => {
+
+            if (err) return res.status(500).send(err);
+
+            db.query(upcomingSql, [userId], (err, upcomingResult) => {
+
+                if (err) return res.status(500).send(err);
+
+                res.render('dashboard', {
+
+                    user: req.session.user,
+
+                    totalCreated: createdResult[0].totalCreated,
+
+                    totalJoined: joinedResult[0].totalJoined,
+
+                    upcomingEvents: upcomingResult
+
+                });
+
             });
 
-        } else {
+        });
 
-            res.render('usersdashboard', {
-                user: req.session.user
-            });
+    });
 
-        }
-
-    }
-);
-
+});
 
 app.get(
     '/admin',
