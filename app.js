@@ -1259,6 +1259,37 @@ app.post('/profile/edit', checkAuthenticated, (req, res) => {
 
 });
 
+app.get('/users', checkAuthenticated, checkAdmin, (req, res) => {
+
+    const sql = `
+        SELECT
+            userId,
+            username,
+            email,
+            contact,
+            role
+        FROM users
+        ORDER BY username ASC
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Database Error");
+        }
+
+        res.render("users", {
+
+            user: req.session.user,
+            users: results
+
+        });
+
+    });
+
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
