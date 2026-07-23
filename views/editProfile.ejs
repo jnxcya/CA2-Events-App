@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Gaming Event Planner</title>
+
+    <link rel="stylesheet" href="/css/stylesheet.css">
+
+    <style>
+
+        body{
+            background:#111827;
+            color:white;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        nav{
+            background:#1f2937;
+            padding:20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-left:18px;
+        }
+
+        .brand{
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .container{
+            width:90%;
+            max-width:650px;
+            margin:50px auto;
+        }
+
+        .form-card{
+
+            background:#1f2937;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,.4);
+
+        }
+
+        h1{
+
+            text-align:center;
+            margin-bottom:30px;
+
+        }
+
+        label{
+
+            display:block;
+            margin-top:20px;
+            margin-bottom:8px;
+            font-weight:bold;
+
+        }
+
+        input{
+
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            font-size:15px;
+
+        }
+
+        .buttons{
+
+            display:flex;
+            gap:15px;
+            margin-top:30px;
+
+        }
+
+        button{
+
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:12px 25px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+
+        }
+
+        button:hover{
+
+            background:#1d4ed8;
+
+        }
+
+        .cancel{
+
+            background:#6b7280;
+            color:white;
+            text-decoration:none;
+            padding:12px 25px;
+            border-radius:8px;
+
+        }
+
+        .cancel:hover{
+
+            background:#4b5563;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav>
+
+    <a class="brand" href="/">🎮 Gaming Event Planner</a>
+
+    <div>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/events">Browse Events</a>
+        <a href="/statistics">Statistics</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="form-card">
+
+        <h1>Edit Profile</h1>
+
+        <form action="/profile/edit" method="POST">
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                value="<%= userData.username %>"
+                required
+            >
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                value="<%= userData.email %>"
+                required
+            >
+
+            <label>Address</label>
+
+            <input
+                type="text"
+                name="address"
+                value="<%= userData.address %>"
+                required
+            >
+
+            <label>Contact Number</label>
+
+            <input
+                type="text"
+                name="contact"
+                value="<%= userData.contact %>"
+                required
+            >
+
+            <div class="buttons">
+
+                <button type="submit">
+
+                    Save Changes
+
+                </button>
+
+                <a href="/profile" class="cancel">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
