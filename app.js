@@ -240,7 +240,7 @@ app.post('/login', (req, res) => {
                     'Login successful!'
                 );
 
-                return res.redirect('/dashboard');
+                return res.redirect('dashboard');
             }
 
             req.flash(
@@ -325,7 +325,11 @@ app.get(
     }
 );
 
-app.get('/admin/users', (req, res) => {
+app.get(
+    '/admin/users',
+    checkAuthenticated,
+    checkAdmin,
+    (req,res)=>{
 
     const sql = 'SELECT * FROM users';
 
@@ -341,13 +345,16 @@ app.get('/admin/users', (req, res) => {
 
 });
 
-app.get('/admin/deleteUser/:id', (req, res) => {
+app.get('/admin/deleteUser/:id', 
+        checkAuthenticated,
+        checkAdmin,
+        (req,res)=>{
 
     const userId = req.params.id;
 
     const sql = 'DELETE FROM users WHERE userId = ?';
 
-    connection.query(sql, [userId], (err) => {
+    db.query(sql, [userId], (err) => {
 
         if (err) throw err;
 
@@ -357,7 +364,10 @@ app.get('/admin/deleteUser/:id', (req, res) => {
 
 });
 
-app.get('/admin/manageevents', (req, res) => {
+app.get('/admin/manageevents', 
+        checkAuthenticated,
+        checkAdmin,
+        (req,res)=>{
 
     const sql = `
         SELECT events.*, users.username
@@ -379,7 +389,10 @@ app.get('/admin/manageevents', (req, res) => {
 
 });
 
-app.get('/admin/deleteEvent/:id', (req, res) => {
+app.get('/admin/deleteEvent/:id', 
+        checkAuthenticated,
+        checkAdmin,
+        (req,res)=>{
 
     const eventId = req.params.id;
 
@@ -674,7 +687,6 @@ app.post('/events/:id/delete', checkAuthenticated, (req, res) => {
         }
     );
 });
-
 
 
 app.get('/events', (req, res) => {
