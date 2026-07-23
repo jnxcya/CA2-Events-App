@@ -995,7 +995,6 @@ app.get(
 );
 
 
-
 app.post(
     '/events/:id/leave',
     checkAuthenticated,
@@ -1049,7 +1048,96 @@ app.post(
     }
 );
 
+app.get('/statistics', checkAuthenticated, (req, res) => {
 
+    const totalUsersSql = `
+        SELECT COUNT(*) AS totalUsers
+        FROM users
+    `;
+
+    const totalEventsSql = `
+        SELECT COUNT(*) AS totalEvents
+        FROM events
+    `;
+
+    const gameSql = `
+        SELECT gameName,
+               COUNT(*) AS total
+        FROM events
+        GROUP BY gameName
+        ORDER BY total DESC
+    `;
+
+    const platformSql = `
+        SELECT platform,
+               COUNT(*) AS total
+        FROM events
+        GROUP BY platform
+    `;
+
+    const popularSql = `
+        SELECT
+            e.title,
+            COUNT(ep.userId) AS participants
+
+        FROM events e
+
+        LEFT JOIN event_participants ep
+
+        ON e.eventId = ep.eventId
+
+        GROUP BY e.eventId
+
+        ORDER BY participants DESC
+    `;
+
+    db.query(totalUsersSql, (err, users) => {
+
+        if (err) return res.status(500).send(err);
+
+        db.query(totalEventsSql, (err, events) => {
+
+            if (err) return res.status(500).send(err);
+
+            db.query(gameSql, (err, games) => {
+
+                if (err) return res.status(500).send(err);
+
+                db.query(platformSql, (err, platforms) => {
+
+                    if (err) return res.status(500).send(err);
+
+                    db.query(popularSql, (err, popular) => {
+
+                        if (err) return res.status(500).send(err);
+
+                        res.render('statistics', {
+
+                            user: req.session.user,
+
+                            totalUsers: users[0].totalUsers,
+
+                            totalEvents: events[0].totalEvents,
+
+                            games,
+
+                            platforms,
+
+                            popular
+
+                        });
+
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+});
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
