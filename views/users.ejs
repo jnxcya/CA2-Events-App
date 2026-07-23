@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="/stylesheet.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navrbar-expand">
+        <div class="admin-container">
+            <a class="navbar-brand" href="/admin">
+                Game Events Admin
+            </a>
+            <ul class="admin-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">Manage Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/manageevents">Manage Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--Page Header-->
+    <div class="users">
+        <h1>
+            Manage Users
+        </h1>
+        <p class="users-subtitle">
+            View and manage all registered users
+        </p>
+    </div>
+    <!-- Users Table -->
+    <div class="users-table">
+        <table>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Role</th>
+                <th>Delete</th>
+            </tr>
+            <% users.forEach(user=> { %>
+
+                <tr>
+                    <td>
+                        <%= user.userId %>
+                    </td>
+                    <td>
+                        <%= user.username %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.contact %>
+                    </td>
+                    <td>
+                        <%= user.role %>
+                    </td>
+
+                    <td>
+                        <a href="/admin/deleteUser/<%= user.userId %>" class="delete-btn"
+                            onclick="return confirm('Are you sure you want to delete this user?')">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                <% }) %>
+        </table>
+</body>
+
+</html>

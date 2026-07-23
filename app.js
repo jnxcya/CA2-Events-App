@@ -28,6 +28,7 @@ const db = mysql.createConnection({
 });
 
 
+
 db.connect((err) => {
     if (err) {
         throw err;
@@ -254,18 +255,39 @@ app.post('/login', (req, res) => {
 
 
 
+// app.get(
+//     '/dashboard',
+//     checkAuthenticated,
+//     (req, res) => {
+//         res.render('dashboard', {
+//             user: req.session.user,
+//             messages: req.flash('success'),
+//             errors: req.flash('error')
+//         });
+//     }
+// );
+
 app.get(
     '/dashboard',
     checkAuthenticated,
     (req, res) => {
-        res.render('dashboard', {
-            user: req.session.user,
-            messages: req.flash('success'),
-            errors: req.flash('error')
-        });
+
+        if (req.session.user.role === 'admin') {
+
+            res.render('dashboard', {
+                user: req.session.user
+            });
+
+        } else {
+
+            res.render('usersdashboard', {
+                user: req.session.user
+            });
+
+        }
+
     }
 );
-
 
 
 app.get(
@@ -280,6 +302,38 @@ app.get(
         });
     }
 );
+
+app.get('/admin/users', (req, res) => {
+
+    const sql = 'SELECT * FROM users';
+
+    db.query(sql, (err, results) => {
+
+        if (err) throw err;
+
+        res.render('users', {
+            users: results
+        });
+
+    });
+
+});
+
+app.get('/admin/deleteUser/:id', (req, res) => {
+
+    const userId = req.params.id;
+
+    const sql = 'DELETE FROM users WHERE userId = ?';
+
+    connection.query(sql, [userId], (err) => {
+
+        if (err) throw err;
+
+        res.redirect('/admin/users');
+
+    });
+
+});
 
 const validateEvent = (req, res, next) => {
     const redirectTo = req.params.id
