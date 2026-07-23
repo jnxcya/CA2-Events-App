@@ -81,7 +81,7 @@ const checkAdmin = (req, res, next) => {
     }
 
     req.flash('error', 'Access denied');
-    res.redirect('/dashboard');
+    res.redirect('/userdashboard');
 };
 
 
@@ -240,7 +240,7 @@ app.post('/login', (req, res) => {
                     'Login successful!'
                 );
 
-                return res.redirect('dashboard');
+                return res.redirect('/userdashboard');
             }
 
             req.flash(
@@ -292,7 +292,7 @@ app.get('/user-dashboard', checkAuthenticated, (req, res) => {
 
                 if(err) return res.status(500).send(err);
 
-                res.render("userDashboard",{
+                res.render("/userDashboard",{
 
                     user:req.session.user,
 
