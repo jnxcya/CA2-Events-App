@@ -1048,6 +1048,7 @@ app.post(
     }
 );
 
+// statistics
 app.get('/statistics', checkAuthenticated, (req, res) => {
 
     const totalUsersSql = `
@@ -1139,6 +1140,125 @@ app.get('/statistics', checkAuthenticated, (req, res) => {
 
 });
 
+// profile
+app.get('/profile', checkAuthenticated, (req, res) => {
+
+    const sql = `
+        SELECT *
+        FROM users
+        WHERE userId = ?
+    `;
+
+    db.query(sql, [req.session.user.userId], (err, results) => {
+
+        if (err) {
+
+            console.error(err);
+
+            return res.status(500).send("Database Error");
+
+        }
+
+        res.render('profile', {
+
+            user: req.session.user,
+
+            userData: results[0]
+
+        });
+
+    });
+
+});
+
+// edit profile
+app.get('/profile/edit', checkAuthenticated, (req, res) => {
+
+    const sql = `
+        SELECT *
+        FROM users
+        WHERE userId = ?
+    `;
+
+    db.query(sql, [req.session.user.userId], (err, results) => {
+
+        if (err) return res.status(500).send(err);
+
+        res.render('editProfile', {
+
+            user: req.session.user,
+
+            userData: results[0]
+
+        });
+
+    });
+
+});
+
+
+app.post('/profile/edit', checkAuthenticated, (req, res) => {
+
+    const {
+
+        username,
+
+        email,
+
+        address,
+
+        contact
+
+    } = req.body;
+
+    const sql = `
+        UPDATE users
+
+        SET
+
+        username=?,
+
+        email=?,
+
+        address=?,
+
+        contact=?
+
+        WHERE userId=?
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            username,
+
+            email,
+
+            address,
+
+            contact,
+
+            req.session.user.userId
+
+        ],
+
+        (err) => {
+
+            if (err) return res.status(500).send(err);
+
+            req.session.user.username = username;
+
+            res.redirect('/profile');
+
+        }
+
+    );
+
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -1155,8 +1275,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 
