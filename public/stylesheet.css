@@ -48,6 +48,21 @@ body {
     background: Blue;
 }
 
+.events-table table{
+    width: 100%;
+    border-spacing: 0 12px;
+}
+.events-table th{
+    background: blue;
+    color: white;
+    padding: 16px 20px;
+    text-align: left;
+}
+.event-table td{
+    padding: 18px 20px;
+    background: white;
+}
+
 .navbar{
     background:#1f2937;
     width:100%;

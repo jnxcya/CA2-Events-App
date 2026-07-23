@@ -335,6 +335,54 @@ app.get('/admin/deleteUser/:id', (req, res) => {
 
 });
 
+app.get('/admin/manageevents', (req, res) => {
+
+    const sql = `
+        SELECT events.*, users.username
+        FROM events
+        LEFT JOIN users
+        ON events.createdBy = users.userId
+        ORDER BY eventDate DESC
+    `;
+
+    db.query(sql, (err, events) => {
+
+        if (err) throw err;
+
+        res.render('manageevents', {
+            events: events
+        });
+
+    });
+
+});
+
+app.get('/admin/deleteEvent/:id', (req, res) => {
+
+    const eventId = req.params.id;
+
+    const deleteParticipants =
+        'DELETE FROM event_participants WHERE eventId = ?';
+
+    const deleteEvent =
+        'DELETE FROM events WHERE eventId = ?';
+
+    db.query(deleteParticipants, [eventId], (err) => {
+
+        if (err) throw err;
+
+        db.query(deleteEvent, [eventId], (err) => {
+
+            if (err) throw err;
+
+            res.redirect('/admin/manageevents');
+
+        });
+
+    });
+
+});
+
 const validateEvent = (req, res, next) => {
     const redirectTo = req.params.id
         ? `/events/${req.params.id}/edit`
