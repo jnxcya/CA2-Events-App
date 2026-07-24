@@ -49,6 +49,18 @@ body {
 .delete-btn:hover{
     background: Blue;
 }
+.report-btn{
+    background: red;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-right: 8px;
+    font-weight: bold;
+}
+.report-btn:hover{
+    background: #d97706;
+}
 .event-card h2{
     color: black;
 }
