@@ -63,6 +63,111 @@ body {
     background: white;
 }
 
+body{
+    background-color: #111827;
+    color: white;
+}
+.admindashboard {
+    width: 90%;
+    margin: 30px auto;
+}
+
+.admin-daashboard {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+}
+
+.admin-daashboard h1 {
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.admin-daashboard h5 {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.admin-daashboard p {
+    color: #777;
+}
+.admin-row {
+    width: 90%;
+    margin: 20px auto;
+    display: flex;
+    gap: 20px;
+}
+
+.adminrow {
+    flex: 1;
+}
+
+.admincard {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+    transition: 0.3s;
+}
+
+.admincard:hover {
+    transform: translateY(-5px);
+}
+
+.adminnumber {
+    font-size: 50px;
+    color: #2563eb;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.admincard h3 {
+    color: #444;
+}
+.admintable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admintable th {
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
+
+.admintable td {
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
+
+.admintable tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.admintable tr:hover {
+    background: #eef4ff;
+}
+.cardadmin:first-of-type .admintable th {
+    width: 70%;
+    background: #f1f5f9;
+    color: #333;
+}
+
+.cardadmin:first-of-type .admintable td {
+    text-align: right;
+    font-weight: bold;
+}
+
+.cardadmin:first-of-type .admintable tr:last-child {
+    background: #dbeafe;
+    font-size: 18px;
+}
+
 .navbar{
     background:#1f2937;
     width:100%;

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/stylesheet.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navrbar-expand">
+        <div class="admin-container">
+            <a class="navbar-brand" href="/admin">
+                Game Events Admin
+            </a>
+            <ul class="admin-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admindashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">Manage Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/manageevents">Manage Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/usersdashboard">Users Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Dashboard Content -->
+    <div class="admindashboard">
+        <div class="admin-daashboard">
+            <h1>Admin Dashboard</h1>
+            <h5>Welcome back, <%= user.username %>!</h5>
+            <p>Role: <%= user.role %>
+            </p>
+        </div>
+    </div>
+    <div class="admin-row">
+        <div class="adminrow">
+            <div class="admincard">
+                <div class="adminnumber">
+                    <%= totalUsers %>
+                </div>
+                <h3>Total Users</h3>
+            </div>
+        </div>
+        <div class="adminrow">
+            <div class="admincard">
+                <div class="adminnumber">
+                    <%= totalEvents %>
+                </div>
+                <h3>Total Events</h3>
+            </div>
+        </div>
+    </div>
+    <!-- Report -->
+    <div class="cardadmin">
+        <h2>Total Report</h2>
+        <table class="admintable">
+            <tr>
+                <th>Total Members</th>
+                <td>
+                    <%= totalUsers %>
+                </td>
+            </tr>
+            <tr>
+                <th>Total Events</th>
+                <td>
+                    <%= totalEvents %>
+                </td>
+            </tr>
+            <tr>
+                <th>Total Records</th>
+                <td><strong>
+                        <%= totalReport %>
+                    </strong></td>
+            </tr>
+        </table>
+    </div>
+    <div class="cardadmin">
+        <h2> Recent Events</h2>
+        <table class="admintable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Game</th>
+                    <th>Platform</th>
+                    <th>Date</th>
+                    <th>Creator</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% recentEvents.forEach(event=>{ %>
+                    <tr>
+                        <td>
+                            <%= event.title %>
+                        </td>
+                        <td>
+                            <%= event.gameName %>
+                        </td>
+                        <td>
+                            <%= event.platform %>
+                        </td>
+                        <td>
+                            <%= event.eventDate.toDateString() %>
+                        </td>
+                        <td>
+                            <%= event.username %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

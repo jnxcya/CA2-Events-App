@@ -73,15 +73,12 @@ const checkAuthenticated = (req, res, next) => {
 };
 
 const checkAdmin = (req, res, next) => {
-    if (
-        req.session.user &&
-        req.session.user.role === 'admin'
-    ) {
+    if (req.session.user && req.session.user.role === 'admin') {
         return next();
     }
 
     req.flash('error', 'Access denied');
-    res.redirect('/userdashboard');
+    res.redirect('/admindashboard');
 };
 
 
@@ -235,12 +232,13 @@ app.post('/login', (req, res) => {
             if (results.length > 0) {
                 req.session.user = results[0];
 
-                req.flash(
-                    'success',
-                    'Login successful!'
-                );
+                req.flash('success', 'Login successful!');
 
-                return res.redirect('/userdashboard');
+                if (results[0].role === 'admin') {
+                    return res.redirect('/admindashboard');
+                } else {
+                    return res.redirect('/usersdashboard');
+                }
             }
 
             req.flash(
@@ -255,7 +253,7 @@ app.post('/login', (req, res) => {
 
 
 
-app.get('/user-dashboard', checkAuthenticated, (req, res) => {
+app.get('/usersdashboard', checkAuthenticated, (req, res) => {
 
     const userId = req.session.user.userId;
 
@@ -280,27 +278,27 @@ app.get('/user-dashboard', checkAuthenticated, (req, res) => {
         LIMIT 5
     `;
 
-    db.query(createdSql,[userId],(err,createdResult)=>{
+    db.query(createdSql, [userId], (err, createdResult) => {
 
-        if(err) return res.status(500).send(err);
+        if (err) return res.status(500).send(err);
 
-        db.query(joinedSql,[userId],(err,joinedResult)=>{
+        db.query(joinedSql, [userId], (err, joinedResult) => {
 
-            if(err) return res.status(500).send(err);
+            if (err) return res.status(500).send(err);
 
-            db.query(upcomingSql,[userId],(err,upcomingResult)=>{
+            db.query(upcomingSql, [userId], (err, upcomingResult) => {
 
-                if(err) return res.status(500).send(err);
+                if (err) return res.status(500).send(err);
 
-                res.render("/userDashboard",{
+                res.render("usersdashboard", {
 
-                    user:req.session.user,
+                    user: req.session.user,
 
-                    totalCreated:createdResult[0].totalCreated,
+                    totalCreated: createdResult[0].totalCreated,
 
-                    totalJoined:joinedResult[0].totalJoined,
+                    totalJoined: joinedResult[0].totalJoined,
 
-                    upcomingEvents:upcomingResult
+                    upcomingEvents: upcomingResult
 
                 });
 
@@ -313,11 +311,10 @@ app.get('/user-dashboard', checkAuthenticated, (req, res) => {
 });
 
 app.get(
-    '/admin',
+    '/usersdashboard',
     checkAuthenticated,
-    checkAdmin,
     (req, res) => {
-        res.render('admin', {
+        res.render('usersdashboard', {
             user: req.session.user,
             messages: req.flash('success'),
             errors: req.flash('error')
@@ -325,51 +322,123 @@ app.get(
     }
 );
 
+// app.get(
+//     '/admindashboard',
+//     checkAuthenticated,
+//     checkAdmin,
+//     (req, res) => {
+//         res.render('admindashboard', {
+//             user: req.session.user,
+//             messages: req.flash('success'),
+//             errors: req.flash('error')
+//         });
+//     }
+// );
+
+app.get('/admindashboard', checkAuthenticated, checkAdmin, (req, res) => {
+
+    const totalUsersSql = `
+        SELECT COUNT(*) AS totalUsers
+        FROM users
+        WHERE role != 'admin'
+    `;
+
+    const totalAdminsSql = `
+        SELECT COUNT(*) AS totalAdmins
+        FROM users
+        WHERE role = 'admin'
+    `;
+
+    const totalEventsSql = `
+        SELECT COUNT(*) AS totalEvents
+        FROM events
+    `;
+
+    const recentEventsSql = `
+        SELECT events.*, users.username
+        FROM events
+        LEFT JOIN users
+        ON events.createdBy = users.userId
+        ORDER BY eventDate DESC
+        LIMIT 5
+    `;
+
+    db.query(totalUsersSql, (err, users) => {
+        if (err) return res.status(500).send(err);
+
+        db.query(totalAdminsSql, (err, admins) => {
+            if (err) return res.status(500).send(err);
+
+            db.query(totalEventsSql, (err, events) => {
+                if (err) return res.status(500).send(err);
+
+                db.query(recentEventsSql, (err, recentEvents) => {
+                    if (err) return res.status(500).send(err);
+
+                    const totalReport =
+                        users[0].totalUsers +
+                        events[0].totalEvents;
+
+                    res.render('admindashboard', {
+                        user: req.session.user,
+                        totalUsers: users[0].totalUsers,
+                        totalAdmins: admins[0].totalAdmins,
+                        totalEvents: events[0].totalEvents,
+                        totalReport,
+                        recentEvents
+                    });
+                });
+            });
+        });
+    });
+
+});
+
 app.get(
-    '/admin/users',
+    '/users',
     checkAuthenticated,
     checkAdmin,
-    (req,res)=>{
+    (req, res) => {
 
-    const sql = 'SELECT * FROM users';
+        const sql = 'SELECT * FROM users';
 
-    db.query(sql, (err, results) => {
+        db.query(sql, (err, results) => {
 
-        if (err) throw err;
+            if (err) throw err;
 
-        res.render('users', {
-            users: results
+            res.render('users', {
+                users: results
+            });
+
         });
 
     });
 
-});
+app.get('/admin/deleteUser/:id',
+    checkAuthenticated,
+    checkAdmin,
+    (req, res) => {
 
-app.get('/admin/deleteUser/:id', 
-        checkAuthenticated,
-        checkAdmin,
-        (req,res)=>{
+        const userId = req.params.id;
 
-    const userId = req.params.id;
+        const sql = 'DELETE FROM users WHERE userId = ?';
 
-    const sql = 'DELETE FROM users WHERE userId = ?';
+        db.query(sql, [userId], (err) => {
 
-    db.query(sql, [userId], (err) => {
+            if (err) throw err;
 
-        if (err) throw err;
+            res.redirect('/admin/users');
 
-        res.redirect('/admin/users');
+        });
 
     });
 
-});
+app.get('/admin/manageevents',
+    checkAuthenticated,
+    checkAdmin,
+    (req, res) => {
 
-app.get('/admin/manageevents', 
-        checkAuthenticated,
-        checkAdmin,
-        (req,res)=>{
-
-    const sql = `
+        const sql = `
         SELECT events.*, users.username
         FROM events
         LEFT JOIN users
@@ -377,46 +446,46 @@ app.get('/admin/manageevents',
         ORDER BY eventDate DESC
     `;
 
-    db.query(sql, (err, events) => {
-
-        if (err) throw err;
-
-        res.render('manageevents', {
-            events: events
-        });
-
-    });
-
-});
-
-app.get('/admin/deleteEvent/:id', 
-        checkAuthenticated,
-        checkAdmin,
-        (req,res)=>{
-
-    const eventId = req.params.id;
-
-    const deleteParticipants =
-        'DELETE FROM event_participants WHERE eventId = ?';
-
-    const deleteEvent =
-        'DELETE FROM events WHERE eventId = ?';
-
-    db.query(deleteParticipants, [eventId], (err) => {
-
-        if (err) throw err;
-
-        db.query(deleteEvent, [eventId], (err) => {
+        db.query(sql, (err, events) => {
 
             if (err) throw err;
 
-            res.redirect('/admin/manageevents');
+            res.render('manageevents', {
+                events: events
+            });
 
         });
 
     });
 
-});
+app.get('/admin/deleteEvent/:id',
+    checkAuthenticated,
+    checkAdmin,
+    (req, res) => {
+
+        const eventId = req.params.id;
+
+        const deleteParticipants =
+            'DELETE FROM event_participants WHERE eventId = ?';
+
+        const deleteEvent =
+            'DELETE FROM events WHERE eventId = ?';
+
+        db.query(deleteParticipants, [eventId], (err) => {
+
+            if (err) throw err;
+
+            db.query(deleteEvent, [eventId], (err) => {
+
+                if (err) throw err;
+
+                res.redirect('/admin/manageevents');
+
+            });
+
+        });
+
+    });
 
 const validateEvent = (req, res, next) => {
     const redirectTo = req.params.id
