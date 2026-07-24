@@ -395,7 +395,7 @@ app.get('/admindashboard', checkAuthenticated, checkAdmin, (req, res) => {
 });
 
 app.get(
-    '/users',
+    '/admin/users',
     checkAuthenticated,
     checkAdmin,
     (req, res) => {
@@ -433,31 +433,44 @@ app.get('/admin/deleteUser/:id',
 
     });
 
-app.get('/admin/manageevents',
-    checkAuthenticated,
-    checkAdmin,
-    (req, res) => {
+app.get('/admin/manageevents', (req, res) => {
 
-        const sql = `
+    const sql = `
         SELECT events.*, users.username
         FROM events
-        LEFT JOIN users
+        JOIN users
         ON events.createdBy = users.userId
-        ORDER BY eventDate DESC
+        ORDER BY events.eventDate DESC
     `;
 
-        db.query(sql, (err, events) => {
+    db.query(sql, (err, events) => {
 
-            if (err) throw err;
+        if (err) throw err;
 
-            res.render('manageevents', {
-                events: events
-            });
-
+        res.render('manageevents', {
+            events: events
         });
 
     });
 
+});
+app.get('/admin/reportEvent/:id', (req, res) => {
+
+    const sql = `
+        UPDATE events
+        SET reported = 1
+        WHERE eventId = ?
+    `;
+
+    db.query(sql, [req.params.id], (err) => {
+
+        if (err) throw err;
+
+        res.redirect('/admin/manageevents');
+
+    });
+
+});
 app.get('/admin/deleteEvent/:id',
     checkAuthenticated,
     checkAdmin,

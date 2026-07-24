@@ -35,7 +35,9 @@ body {
 }
 
 .users-table tr:hover{
-    background: #f8fafc;
+    background-color: #2b3445;
+    color: white;
+    transition: 0.3s;
 }
 .delete-btn{
     background: Red;
@@ -47,7 +49,9 @@ body {
 .delete-btn:hover{
     background: Blue;
 }
-
+.event-card h2{
+    color: black;
+}
 .events-table table{
     width: 100%;
     border-spacing: 0 12px;
@@ -167,7 +171,69 @@ body{
     background: #dbeafe;
     font-size: 18px;
 }
+.manage-page{
+    width: 90%;
+    margin: 40px auto;
+}
+.magage-card{
+    background: #1f2937;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+.manage-card h1{
+    color: white;
+    margin-bottom: 10px;
+}
+.magage-card h2{
+    color: white;
+    margin-bottom: 20px
+}
+.manage-card p{
+    color: white;
+}
+.eventadmintable{
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.eventadmintable thead{
+    background: #2f66e7;
+    color: white;
+}
+.eventadmintable th{
+    padding: 15px;
+}
+.eventadmintable td{
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+    color: #222;
+}
+.eventadmintable tbody tr:hover{
+    background:#eef4ff;
+}
+.eventadmintable tbody tr{
+    color:black;
+}
 
+.eventdelete-btn{
+    background: red;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+.eventdelete-btn:hover{
+    background: #dc2626;
+}
+.empty-text{
+    color: #6b7280;
+    font-style: italic;
+}
 .navbar{
     background:#1f2937;
     width:100%;
