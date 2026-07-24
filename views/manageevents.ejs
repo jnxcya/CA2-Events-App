@@ -120,12 +120,8 @@
                                 <td>
                                     <%= event.platform %>
                                 </td>
-                                <td>
-                                    <%= new Date(event.eventDate).toLocaleDateString('en-SG') %>
-                                </td>
-                                <td>
-                                    <%  event.username %>
-                                </td>
+                                <td><%= new Date(event.eventDate).toLocaleDateString('en-SG') %></td>
+                                <td><%= event.username %></td>
                                 <td>
                                     <% if(event.reported==1) { %>
                                         <span class="status reported">
