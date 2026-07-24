@@ -128,11 +128,25 @@
                                                                 <%= event.currentPlayers %> / <%= event.maxPlayers %>
                                                             </p>
 
+<<<<<<< HEAD
                                                             <% if (event.description) { %>
                                                                 <p><strong>Description:</strong>
                                                                     <%= event.description %>
                                                                 </p>
                                                                 <% } %>
+=======
+                        <% if (event.description) { %>
+                            <p><strong>Description:</strong> <%= event.description %></p>
+                        <% } %>
+                        <p>
+                            <strong>Status:</strong>
+                            <% if (event.reported == 1) { %>
+                                <span class="reported-status">Reported by Admin</span>
+                            <%} else { %>
+                                <span class="active-status">Active</span>
+                            <%}%>
+                        </p>
+>>>>>>> 5e4d67c0e1e39af63ebb0fd5e4bd20158985e8ca
 
                                                                     <div class="event-actions">
 

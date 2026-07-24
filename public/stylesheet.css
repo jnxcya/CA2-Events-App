@@ -61,6 +61,15 @@ body {
 .report-btn:hover{
     background: #d97706;
 }
+.reported-status{
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.active-status{
+    color: #16a34a;
+    font-weight: bold;
+}
 .event-card h2{
     color: black;
 }
