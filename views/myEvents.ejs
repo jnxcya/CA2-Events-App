@@ -127,45 +127,46 @@
                                                                 <strong>Players:</strong>
                                                                 <%= event.currentPlayers %> / <%= event.maxPlayers %>
                                                             </p>
-
-<<<<<<< HEAD
                                                             <% if (event.description) { %>
                                                                 <p><strong>Description:</strong>
                                                                     <%= event.description %>
                                                                 </p>
                                                                 <% } %>
-=======
-                        <% if (event.description) { %>
-                            <p><strong>Description:</strong> <%= event.description %></p>
-                        <% } %>
-                        <p>
-                            <strong>Status:</strong>
-                            <% if (event.reported == 1) { %>
-                                <span class="reported-status">Reported by Admin</span>
-                            <%} else { %>
-                                <span class="active-status">Active</span>
-                            <%}%>
-                        </p>
->>>>>>> 5e4d67c0e1e39af63ebb0fd5e4bd20158985e8ca
+                                                                    <% if (event.description) { %>
+                                                                        <p><strong>Description:</strong>
+                                                                            <%= event.description %>
+                                                                        </p>
+                                                                        <% } %>
+                                                                            <p>
+                                                                                <strong>Status:</strong>
+                                                                                <% if (event.reported==1) { %>
+                                                                                    <span
+                                                                                        class="reported-status">Reported
+                                                                                        by Admin</span>
+                                                                                    <%} else { %>
+                                                                                        <span
+                                                                                            class="active-status">Active</span>
+                                                                                        <%}%>
+                                                                            </p>
 
-                                                                    <div class="event-actions">
+                                                                            <div class="event-actions">
 
-                                                                        <a class="button secondary-button"
-                                                                            href="/events/<%= event.eventId %>/edit">
-                                                                            Edit
-                                                                        </a>
+                                                                                <a class="button secondary-button"
+                                                                                    href="/events/<%= event.eventId %>/edit">
+                                                                                    Edit
+                                                                                </a>
 
-                                                                        <form
-                                                                            action="/events/<%= event.eventId %>/delete"
-                                                                            method="POST"
-                                                                            onsubmit="return confirm('Delete this event? This cannot be undone.');">
-                                                                            <button class="button leave-button"
-                                                                                type="submit">
-                                                                                Delete
-                                                                            </button>
-                                                                        </form>
+                                                                                <form
+                                                                                    action="/events/<%= event.eventId %>/delete"
+                                                                                    method="POST"
+                                                                                    onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                                                                                    <button class="button leave-button"
+                                                                                        type="submit">
+                                                                                        Delete
+                                                                                    </button>
+                                                                                </form>
 
-                                                                    </div>
+                                                                            </div>
 
                                                         </article>
 

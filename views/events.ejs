@@ -149,6 +149,15 @@
                 <% if (event.description) { %>
                 <p><strong>Description:</strong> <%= event.description %></p>
                 <% } %>
+                <!--Report status-->
+                <p>
+                    <strong>Status:</strong>
+                    <% if (event.reported==1){ %>
+                        <span class="reported-status">Reported by Admin</span>
+                    <%} else { %>
+                        <span class="active-status">Active</span>
+                    <%}%>
+                </p>
 
                 <div class="event-actions">
 
