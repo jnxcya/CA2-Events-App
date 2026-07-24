@@ -143,6 +143,8 @@
                                                                                     <span
                                                                                         class="reported-status">Reported
                                                                                         by Admin</span>
+                                                                                    <%} else if (evnet.currentPlayers >= event.maxPlayers){ %>
+                                                                                        <span class="status full">Full</span>                                                                                
                                                                                     <%} else { %>
                                                                                         <span
                                                                                             class="active-status">Active</span>

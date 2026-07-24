@@ -87,7 +87,10 @@ body {
     padding: 18px 20px;
     background: white;
 }
-
+.status.full{
+    color: #f59e0b;
+    font-weight: bold;
+}
 body{
     background-color: #111827;
     color: white;

@@ -131,11 +131,13 @@
                                         <span class="status reported">
                                             Reported
                                         </span>
+                                        <%} else if (event.currentPlayers >= event.maxPlayers) { %>
+                                            <span class="status full">Full</span>
                                         <%} else { %>
                                             <span class="status active">
                                                 Active
                                             </span>
-                                            <%}%>
+                                        <%}%>
                                 </td>
                                 <td class="action-buttons">
                                     <% if(event.reported==0){ %>
