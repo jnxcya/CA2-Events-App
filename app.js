@@ -1071,7 +1071,7 @@ app.get(
                         );
                 }
 
-                res.render('joinedEvents', {
+                res.render('JoinedEvents', {
                     events: results,
                     user: req.session.user,
                     success:
