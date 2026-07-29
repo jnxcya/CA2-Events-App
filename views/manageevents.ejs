@@ -33,90 +33,126 @@
     </nav>
     <div class="manage-page">
         <!-- Header -->
-        <div class="manage-card">
+        <div class="manage-header">
             <h1>Manage Events</h1>
-            <p>View and manage all gaming events</p>
+            <p>Review, report and remove gaming events</p>
         </div>
         <!-- Reported Events -->
-        <div class="manage-card">
-            <h2>Reported Events</h2>
-            <% const reportedEvents = events.filter(event => event.reported == 1); %>
-            <% if(reportedEvents.length === 0){ %>
-                <p class="empty-text">No reported events found!</p>
-            <% } else { %>
-            <table class="eventadmintable">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Game</th>
-                        <th>Creator</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% reportedEvents.forEach(event => { %>
-                    <tr>
-                        <td><%= event.title %></td>
-                        <td><%= event.gameName %></td>
-                        <td><%= event.username %></td>
-                        <td>
-                            <a href="/admin/deleteEvent/<%= event.eventId %>"
-                                class="eventdelete-btn"
-                                onclick="return confirm('Delete this reported event?')">Delete</a>
-                        </td>
-                    </tr>
-                <% }) %>
-                </tbody>
-            </table>
-            <% } %>
-        </div>
-        <!-- All Events -->
-        <div class="event-card">
-            <h2>All Events</h2>
-            <table class="eventadmintable">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Game</th>
-                        <th>Platform</th>
-                        <th>Date</th>
-                        <th>Creator</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% events.forEach(event => { %>
-                    <tr>
-                        <td><%= event.title %></td>
-                        <td><%= event.gameName %></td>
-                        <td><%= event.platform %></td>
-                        <td><%= event.eventDate.toDateString() %></td>
-                        <td><%= event.username %></td>
-                        <td>
-                            <% if(event.reported == 1){ %>
-                                <span class="status reported">Reported</span>
-                            <% } else { %>
-                                <span class="status normal">Normal</span>
-                            <% } %>
-                        </td>
-                        <td>
-                            <% if(event.reported == 0){ %>
-                                <a href="/admin/reportEvent/<%= event.eventId %>"
-                                    class="report-btn"
-                                    onclick="return confirm('Mark this event as reported?')">Report</a>
-                            <% } %>
-                            <a href="/admin/deleteEvent/<%= event.eventId %>"
-                                class="eventdelete-btn"
-                                onclick="return confirm('Delete this event?')">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                <% }) %>
-                </tbody>
-            </table>
-        </div>
+        <% const reportedEvents=events.filter(event=> event.reported == 1); %>
+            <div class="admin-card">
+                <div class="card-title">
+                    <h2>Reported Events</h2>
+                    <span class="badge">
+                        <%= reportedEvents.length %>
+                    </span>
+                </div>
+                <table class="eventadmintable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Game</th>
+                            <th>Creator</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (reportedEvents.length==0){ %>
+                            <tr>
+                                <td colspan="5" class="empty-text">
+                                    No reported events found.
+                                </td>
+                            </tr>
+                            <%} else {%>
+                                <% reportedEvents.forEach(event=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= event.title %>
+                                        </td>
+                                        <td>
+                                            <%= event.gameName %>
+                                        </td>
+                                        <td>
+                                            <%= event.username %>
+                                        </td>
+                                        <td>
+                                            <span class="status reported">Reported</span>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/deleteEvent/<%= event.eventId %>" class="eventdelete-btn"
+                                                onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                <%})%>
+                             <%}%>
+                    </tbody>
+                </table>
+            </div>
+            <!--All Events-->
+            <div class="admin-card">
+                <div class="card-title">
+                    <h2>All Events</h2>
+                    <span class="badge">
+                        <%= events.length %>
+                    </span>
+                </div>
+                <table class="eventadmintable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Game</th>
+                            <th>Platform</th>
+                            <th>Date</th>
+                            <th>Creator</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% events.forEach(event=> { %>
+                            <tr>
+                                <td>
+                                    <%= event.title %>
+                                </td>
+                                <td>
+                                    <%= event.gameName %>
+                                </td>
+                                <td>
+                                    <%= event.platform %>
+                                </td>
+                                <td>
+                                    <%= new Date(event.eventDate).toLocaleDateString('en-SG') %>
+                                </td>
+                                <td>
+                                    <%= event.username %>
+                                </td>
+                                <td>
+                                    <% if(event.reported==1) { %>
+                                        <span class="status reported">
+                                            Reported
+                                        </span>
+                                        <%} else if (event.currentPlayers >= event.maxPlayers) { %>
+                                            <span class="status full">Full</span>
+                                        <%} else { %>
+                                            <span class="status active">
+                                                Active
+                                            </span>
+                                        <%}%>
+                                </td>
+                                <td class="action-buttons">
+                                    <% if(event.reported==0){ %>
+                                        <a href="/admin/reportEvent/<%= event.eventId %>" class="report-btn"
+                                            onclick="return confirm('Report this event as inappropriate?')">Report</a>
+                                        <%}%>
+                                            <a href="/admin/deleteEvent/<%= event.eventId %>" class="eventdelete-btn"
+                                                onclick="return confirm('Delete this event?')">Delete</a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
     </div>
 </body>
+
 </html>

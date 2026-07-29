@@ -61,62 +61,73 @@
     <!-- Report -->
     <div class="cardadmin">
         <h2>Total Report</h2>
-        <table class="admintable">
-            <tr>
-                <th>Total Members</th>
-                <td>
+        <div class="report-grid">
+            <div class="report-card">
+                <h3>Total Members</h3>
+                <div class="report-number">
                     <%= totalUsers %>
-                </td>
-            </tr>
-            <tr>
-                <th>Total Events</th>
-                <td>
+                </div>
+            </div>
+            <div class="report-card">
+                <h3>Total Events</h3>
+                <div class="report-number">
                     <%= totalEvents %>
-                </td>
-            </tr>
-            <tr>
-                <th>Total Records</th>
-                <td><strong>
-                        <%= totalReport %>
-                    </strong></td>
-            </tr>
-        </table>
+                </div>
+            </div>
+            <div class="report-card">
+                <h3>Total Records</h3>
+                <div class="report-number total-records">
+                    <%= totalReport %>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="cardadmin">
         <h2> Recent Events</h2>
-        <table class="admintable">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Game</th>
-                    <th>Platform</th>
-                    <th>Date</th>
-                    <th>Creator</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% recentEvents.forEach(event=>{ %>
-                    <tr>
-                        <td>
-                            <%= event.title %>
-                        </td>
-                        <td>
-                            <%= event.gameName %>
-                        </td>
-                        <td>
-                            <%= event.platform %>
-                        </td>
-                        <td>
-                            <%= event.eventDate.toDateString() %>
-                        </td>
-                        <td>
-                            <%= event.username %>
-                        </td>
-                    </tr>
-                    <% }); %>
-            </tbody>
-        </table>
+        <span class="badge"><%= recentEvents.length %></span>
     </div>
+    <table class="recent-events-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Game</th>
+                <th>Platform</th>
+                <th>Date</th>
+                <th>Creator</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(recentEvents.length === 0) { %>
+                <tr>
+                    <td colspan="5" class="empty-text">
+                        No recent events found.
+                    </td>
+                </tr>
+            <%} else { %>
+                <% recentEvents.forEach(event => { %>
+                <tr>
+                    <td>
+                        <strong><%= event.title %></strong>
+                    </td>
+                    <td>
+                        <span class="game-tag">
+                            <%= event.gameName %>
+                        </span>
+                    </td>
+                    <td>
+                        <%= event.platform %>
+                    </td>
+                    <td>
+                        <%= event.eventDate.toLocaleDateString('en-SG') %>
+                    </td>
+                    <td>
+                        <%= event.username %>
+                    </td>
+                </tr>
+                <%})%>
+            <%} %>
+        </tbody>
+    </table>
 </body>
 
 </html>

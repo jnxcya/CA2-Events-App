@@ -1031,7 +1031,7 @@ app.post(
 
 
 app.get(
-    '/joined-events',
+    '/JoinedEvents',
     checkAuthenticated,
     (req, res) => {
         const userId =
@@ -1071,7 +1071,7 @@ app.get(
                         );
                 }
 
-                res.render('joinedEvents', {
+                res.render('JoinedEvents', {
                     events: results,
                     user: req.session.user,
                     success:

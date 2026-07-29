@@ -61,6 +61,15 @@ body {
 .report-btn:hover{
     background: #d97706;
 }
+.reported-status{
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.active-status{
+    color: #16a34a;
+    font-weight: bold;
+}
 .event-card h2{
     color: black;
 }
@@ -78,7 +87,10 @@ body {
     padding: 18px 20px;
     background: white;
 }
-
+.status.full{
+    color: #f59e0b;
+    font-weight: bold;
+}
 body{
     background-color: #111827;
     color: white;
@@ -142,46 +154,94 @@ body{
 .admincard h3 {
     color: #444;
 }
-.admintable {
+.section-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px
+}
+.section-header h2{
+    margin: 0;
+    color: #1f2937;
+}
+.badge{
+    background: #2f66e7;
+    color: #fff;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.recent-events-table{
     width: 100%;
     border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 12px;
 }
-
-.admintable th {
-    background: #2563eb;
+.recent-events-table thead {
+    background: #2f66e7;
     color: white;
-    padding: 14px;
-    text-align: left;
 }
-
-.admintable td {
-    background: #2563eb;
-    color: white;
-    padding: 14px;
-    text-align: left;
+.recent-events-table th{
+    padding:16px;
+    text-align:left;
 }
-
-.admintable tr:nth-child(even) {
-    background: #f8f9fa;
+.recent-events-table td{
+    padding:16px;
+    border-bottom:1px solid #e5e7eb;
+    color:white;
 }
-
-.admintable tr:hover {
-    background: #eef4ff;
+.recent-events-table tbody tr{
+    transition:.3s;
 }
-.cardadmin:first-of-type .admintable th {
-    width: 70%;
-    background: #f1f5f9;
-    color: #333;
+.recent-events-table tbody tr:hover{
+    background:#eef4ff;
 }
-
-.cardadmin:first-of-type .admintable td {
-    text-align: right;
+.game-tag{
+    background:#ffffff;
+    color:#3567e8;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
+.empty-text{
+    text-align:center;
+    color:white;
+    font-style:italic;
+    padding:30px;
+}
+.report-grid{
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+.report-card{
+    flex: 1;
+    min-width: 220px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8 px 20px rgba(0, 0, 0, 0.15);
+    transition: 0.3s;
+}
+.report-card:hover{
+    transform: translateY(-5px);
+}
+.report-card h3{
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+.report-number{
+    font-size: 45px;
     font-weight: bold;
+    color: #2f66e7;
 }
-
-.cardadmin:first-of-type .admintable tr:last-child {
-    background: #dbeafe;
-    font-size: 18px;
+.total-records{
+    color: #10b981;
 }
 .manage-page{
     width: 90%;
@@ -627,3 +687,4 @@ h1 {
         padding: 40px 20px;
     }
 }
+

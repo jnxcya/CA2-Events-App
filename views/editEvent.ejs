@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Event</title>
     <link rel="stylesheet" href="/stylesheet.css">
+    <style>
+    /* Headings sit on the dark page background */
+    .container h1,
+    .container .page-description {
+        color: #f4f4f4;
+    }
+
+    /* Text inside the white form panel */
+    .container form,
+    .container form label,
+    .container form input,
+    .container form select,
+    .container form textarea {
+        color: #222;
+    }
+</style>
 </head>
+
 <body>
 
     <nav>
@@ -14,8 +32,8 @@
             <a href="/events">Browse Events</a>
             <a href="/events/add">Create Event</a>
             <a href="/my-events">My Events</a>
-            <a href="/joined-events">Joined Events</a>
-            <a href="/userdashboard">Dashboard</a>
+            <a href="/JoinedEvents">Joined Events</a>
+            <a href="/usersdashboard">Dashboard</a>
             <a href="/statistics">Statistics</a>
             <a href="/profile">Profile</a>
             <a href="/logout">Logout</a>
@@ -29,88 +47,85 @@
             Update the details of your event below.
         </p>
 
-        <% if (errors && errors.length > 0) { %>
+        <% if (errors && errors.length> 0) { %>
             <div class="message error-message">
                 <% errors.forEach(function(error) { %>
-                    <p><%= error %></p>
-                <% }); %>
+                    <p>
+                        <%= error %>
+                    </p>
+                    <% }); %>
             </div>
-        <% } %>
+            <% } %>
+                    
+                <form action="/events/<%= event.eventId %>/edit" method="POST">
 
-        <form action="/events/<%= event.eventId %>/edit" method="POST">
+                    <label for="title">Event Title</label>
+                    <input type="text" id="title" name="title" required
+                        value="<%= formData && formData.title ? formData.title : event.title %>">
 
-            <label for="title">Event Title</label>
-            <input type="text" id="title" name="title" required
-                value="<%= formData && formData.title ? formData.title : event.title %>">
+                    <label for="gameName">Game Name</label>
+                    <input type="text" id="gameName" name="gameName" required
+                        value="<%= formData && formData.gameName ? formData.gameName : event.gameName %>">
 
-            <label for="gameName">Game Name</label>
-            <input type="text" id="gameName" name="gameName" required
-                value="<%= formData && formData.gameName ? formData.gameName : event.gameName %>">
+                    <% const currentPlatform=formData && formData.platform ? formData.platform : event.platform; %>
 
-            <%
-                const currentPlatform =
-                    formData && formData.platform
-                        ? formData.platform
-                        : event.platform;
-            %>
+                        <label for="platform">Platform</label>
+                        <select id="platform" name="platform" required>
+                            <option value="">Select a platform</option>
+                            <option value="PC" <%=currentPlatform==='PC' ? 'selected' : '' %>>PC</option>
+                            <option value="PlayStation" <%=currentPlatform==='PlayStation' ? 'selected' : '' %>
+                                >PlayStation</option>
+                            <option value="Xbox" <%=currentPlatform==='Xbox' ? 'selected' : '' %>>Xbox</option>
+                            <option value="Mobile" <%=currentPlatform==='Mobile' ? 'selected' : '' %>>Mobile</option>
+                            <option value="Nintendo Switch" <%=currentPlatform==='Nintendo Switch' ? 'selected' : '' %>
+                                >Nintendo Switch</option>
+                        </select>
 
-            <label for="platform">Platform</label>
-            <select id="platform" name="platform" required>
-                <option value="">Select a platform</option>
-                <option value="PC" <%= currentPlatform === 'PC' ? 'selected' : '' %>>PC</option>
-                <option value="PlayStation" <%= currentPlatform === 'PlayStation' ? 'selected' : '' %>>PlayStation</option>
-                <option value="Xbox" <%= currentPlatform === 'Xbox' ? 'selected' : '' %>>Xbox</option>
-                <option value="Mobile" <%= currentPlatform === 'Mobile' ? 'selected' : '' %>>Mobile</option>
-                <option value="Nintendo Switch" <%= currentPlatform === 'Nintendo Switch' ? 'selected' : '' %>>Nintendo Switch</option>
-            </select>
+                        <% const currentEventType=formData && formData.eventType ? formData.eventType : event.eventType;
+                            %>
 
-            <%
-                const currentEventType =
-                    formData && formData.eventType
-                        ? formData.eventType
-                        : event.eventType;
-            %>
+                            <label for="eventType">Event Type</label>
+                            <select id="eventType" name="eventType" required>
+                                <option value="">Select an event type</option>
+                                <option value="Tournament" <%=currentEventType==='Tournament' ? 'selected' : '' %>
+                                    >Tournament</option>
+                                <option value="Ranked" <%=currentEventType==='Ranked' ? 'selected' : '' %>>Ranked
+                                    Session</option>
+                                <option value="Casual" <%=currentEventType==='Casual' ? 'selected' : '' %>>Casual Match
+                                </option>
+                                <option value="Training" <%=currentEventType==='Training' ? 'selected' : '' %>>Training
+                                    Session</option>
+                            </select>
 
-            <label for="eventType">Event Type</label>
-            <select id="eventType" name="eventType" required>
-                <option value="">Select an event type</option>
-                <option value="Tournament" <%= currentEventType === 'Tournament' ? 'selected' : '' %>>Tournament</option>
-                <option value="Ranked" <%= currentEventType === 'Ranked' ? 'selected' : '' %>>Ranked Session</option>
-                <option value="Casual" <%= currentEventType === 'Casual' ? 'selected' : '' %>>Casual Match</option>
-                <option value="Training" <%= currentEventType === 'Training' ? 'selected' : '' %>>Training Session</option>
-            </select>
+                            <% const storedDate=new Date(event.eventDate) .toISOString() .split('T')[0]; %>
 
-            <%
-                const storedDate = new Date(event.eventDate)
-                    .toISOString()
-                    .split('T')[0];
-            %>
+                                <label for="eventDate">Date</label>
+                                <input type="date" id="eventDate" name="eventDate" required
+                                    value="<%= formData && formData.eventDate ? formData.eventDate : storedDate %>">
 
-            <label for="eventDate">Date</label>
-            <input type="date" id="eventDate" name="eventDate" required
-                value="<%= formData && formData.eventDate ? formData.eventDate : storedDate %>">
+                                <label for="eventTime">Time</label>
+                                <input type="time" id="eventTime" name="eventTime" required
+                                    value="<%= formData && formData.eventTime ? formData.eventTime : event.eventTime %>">
 
-            <label for="eventTime">Time</label>
-            <input type="time" id="eventTime" name="eventTime" required
-                value="<%= formData && formData.eventTime ? formData.eventTime : event.eventTime %>">
+                                <label for="location">Location / Server</label>
+                                <input type="text" id="location" name="location"
+                                    value="<%= formData && formData.location ? formData.location : (event.location || '') %>">
 
-            <label for="location">Location / Server</label>
-            <input type="text" id="location" name="location"
-                value="<%= formData && formData.location ? formData.location : (event.location || '') %>">
+                                <label for="maxPlayers">Maximum Players</label>
+                                <input type="number" id="maxPlayers" name="maxPlayers" min="2" max="100" required
+                                    value="<%= formData && formData.maxPlayers ? formData.maxPlayers : event.maxPlayers %>">
 
-            <label for="maxPlayers">Maximum Players</label>
-            <input type="number" id="maxPlayers" name="maxPlayers" min="2" max="100" required
-                value="<%= formData && formData.maxPlayers ? formData.maxPlayers : event.maxPlayers %>">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description"
+                                    rows="4"><%= formData && formData.description ? formData.description : (event.description || '') %></textarea>
 
-            <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4"><%= formData && formData.description ? formData.description : (event.description || '') %></textarea>
+                                <button class="button primary-button" type="submit">Save Changes</button>
+                                <a class="button secondary-button" href="/my-events">Cancel</a>
 
-            <button class="button primary-button" type="submit">Save Changes</button>
-            <a class="button secondary-button" href="/my-events">Cancel</a>
-
-        </form>
+                </form>
 
     </main>
 
 </body>
+
 </html>
