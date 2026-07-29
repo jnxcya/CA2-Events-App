@@ -87,21 +87,13 @@
         <% } else { %>
 
         <section class="events-grid">
-
             <% events.forEach(function (event) { %>
-
             <article class="event-card">
-
                 <span class="event-type"><%= event.eventType || 'Gaming Event' %></span>
-
                 <h2><%= event.title %></h2>
-
                 <p><%= event.description || 'No description provided.' %></p>
-
                 <p><strong>Game:</strong> <%= event.gameName || 'Not specified' %></p>
-
                 <p><strong>Platform:</strong> <%= event.platform || 'Not specified' %></p>
-
                 <p>
                     <strong>Date:</strong>
                     <% if (event.eventDate) { %>
@@ -110,20 +102,17 @@
                     Not specified
                     <% } %>
                 </p>
-
                 <p><strong>Time:</strong> <%= event.eventTime || 'Not specified' %></p>
-
                 <p><strong>Location/Server:</strong> <%= event.location || 'Not specified' %></p>
-
                 <p><strong>Players:</strong> <%= event.currentPlayers || 0 %> / <%= event.maxPlayers || 0 %></p>
-
                 <% if (event.joinedAt) { %>
                 <p><strong>Joined on:</strong> <%= new Date(event.joinedAt).toLocaleDateString('en-SG') %></p>
                 <% } %>
-
                 <div class="event-actions">
 
-                    <form action="/events/<%= event.eventId %>/leave" method="POST" onsubmit="return confirm('Are you sure you want to leave this event?');">
+                    <form action="/events/<%= event.eventId %>/leave"
+                         method="POST"
+                          onsubmit="return confirm('Are you sure you want to leave this event?');">
                         <button class="button leave-button" type="submit">Leave Event</button>
                     </form>
 
